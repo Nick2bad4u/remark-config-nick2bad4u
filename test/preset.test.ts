@@ -1,110 +1,71 @@
-import type { Linter } from "eslint";
+import type { Preset } from "unified";
 
-import nickTwoBadFourU, {
+import { remark } from "remark";
+import preset, {
     createConfig,
+    preset as namedPreset,
     presets,
-} from "eslint-config-nick2bad4u";
+    type RemarkPluginEntry,
+} from "remark-config-nick2bad4u";
 import { describe, expect, it } from "vitest";
 
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types -- Linter.Config is ESLint's mutable public config shape. */
+import localPreset from "../preset.mjs";
 
-const getRuleNames = (configEntries: readonly Linter.Config[]): Set<string> => {
-    const ruleNames = configEntries.flatMap((configEntry) =>
-        Object.keys(configEntry.rules ?? {})
-    );
+const isStringPluginEntry = (entry: RemarkPluginEntry): boolean =>
+    typeof entry === "string" ||
+    (Array.isArray(entry) && typeof entry[0] === "string");
 
-    return new Set(ruleNames);
-};
+describe("remark-config-nick2bad4u preset", () => {
+    it("exports the shared preset as the default and named recommended preset", () => {
+        expect.assertions(6);
 
-const getRegisteredPluginNames = (
-    configEntries: readonly Linter.Config[]
-): Set<string> => {
-    const pluginNames = configEntries.flatMap((configEntry) =>
-        Object.keys(configEntry.plugins ?? {})
-    );
-
-    return new Set(pluginNames);
-};
-
-const hasRuleFromPlugin = (
-    configEntries: readonly Linter.Config[],
-    pluginName: string
-): boolean =>
-    [...getRuleNames(configEntries)].some((ruleName) =>
-        ruleName.startsWith(`${pluginName}/`)
-    );
-/* eslint-enable @typescript-eslint/prefer-readonly-parameter-types -- Re-enable after local Linter.Config helpers. */
-
-describe("eslint-config-nick2bad4u presets", () => {
-    it("exposes plugin-style flat config presets", () => {
-        expect.assertions(4);
-
-        expect(nickTwoBadFourU.configs).toBe(presets);
-        expect(presets.all.length).toBeGreaterThan(0);
-        expect(presets.recommended).toBe(presets.all);
-        expect(Array.isArray(presets.all)).toBeTruthy();
+        expect(preset).toBe(namedPreset);
+        expect(preset).toBe(localPreset);
+        expect(presets.all).toBe(namedPreset);
+        expect(presets.recommended).toBe(namedPreset);
+        expect(preset.plugins?.length ?? 0).toBeGreaterThan(0);
+        expect(preset.settings?.gfm).toBeTruthy();
     });
 
-    it.each([
-        ["withoutChunkyLint", "chunkylint"],
-        ["withoutCopilot", "copilot"],
-        ["withoutDocusaurus2", "docusaurus-2"],
-        ["withoutEtcMisc", "etc-misc"],
-        ["withoutFileProgress2", "file-progress-2"],
-        ["withoutGithubActions2", "github-actions-2"],
-        ["withoutImmutable2", "immutable-2"],
-        ["withoutRepo", "repo"],
-        ["withoutSdl2", "sdl-2"],
-        ["withoutStylelint2", "stylelint-2"],
-        ["withoutTsconfig", "tsconfig"],
-        ["withoutTsdocRequire2", "tsdoc-require-2"],
-        ["withoutTypefest", "typefest"],
-        ["withoutTypedoc", "typedoc"],
-        ["withoutUptimeWatcher", "uptime-watcher"],
-        ["withoutVite", "vite"],
-        ["withoutWriteGoodComments2", "write-good-comments-2"],
-    ] as const)(
-        "removes %s plugin rules from the preset",
-        (presetName, pluginName) => {
-            expect.assertions(2);
-
-            const preset = presets[presetName];
-            const registeredPluginNames = getRegisteredPluginNames(preset);
-
-            expect(hasRuleFromPlugin(preset, pluginName)).toBeFalsy();
-            expect(registeredPluginNames.has(pluginName)).toBeFalsy();
-        }
-    );
-
-    it("keeps full preset rules in the all preset", () => {
-        expect.assertions(2);
-
-        expect(hasRuleFromPlugin(presets.all, "copilot")).toBeTruthy();
-        expect(hasRuleFromPlugin(presets.all, "typefest")).toBeTruthy();
-    });
-
-    it("supports local source-rule plugin replacement via createConfig", () => {
+    it("exports imported plugin implementations instead of string plugin names", () => {
         expect.assertions(1);
 
-        const localTypefestPlugin = {
-            configs: {
-                experimental: {
-                    rules: {
-                        "typefest/local-only": "error",
-                    },
-                },
-            },
-            rules: {},
-        };
+        const stringPluginEntries = (preset.plugins ?? []).filter((entry) =>
+            isStringPluginEntry(entry)
+        );
 
-        const configEntries = createConfig({
-            plugins: {
-                typefest: localTypefestPlugin,
+        expect(stringPluginEntries).toStrictEqual([]);
+    });
+
+    it("supports derived project-specific settings and extra plugins", () => {
+        expect.assertions(5);
+
+        const customPlugin = (): undefined => undefined;
+        const derivedConfig = createConfig({
+            plugins: [customPlugin],
+            settings: {
+                gfm: false,
+                rule: "*",
             },
         });
 
-        expect(
-            getRuleNames(configEntries).has("typefest/local-only")
-        ).toBeTruthy();
+        expect(derivedConfig).not.toBe(namedPreset);
+        expect(derivedConfig.settings.gfm).toBeFalsy();
+        expect(derivedConfig.settings.rule).toBe("*");
+        expect(derivedConfig.plugins).toContain(customPlugin);
+        expect(derivedConfig.plugins.at(-2)).toBe(customPlugin);
+    });
+
+    it("can be loaded by Remark without missing plugin dependencies", async () => {
+        expect.assertions(1);
+
+        const file = await remark()
+            .use(preset as Preset)
+            .process({
+                path: "readme.md",
+                value: "# Project\n\nParagraph text.\n",
+            });
+
+        expect(file.messages).toStrictEqual([]);
     });
 });

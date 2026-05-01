@@ -1,5 +1,8 @@
-## Removed README wording
+# Repository conversion notes
 
-Moved out of `README.md` per maintainer request:
+This repository was converted from an ESLint shared-config template into
+`remark-config-nick2bad4u`.
 
-> This package currently targets ESLint 10. The copied Docusaurus JSX-a11y add-on was intentionally omitted because `eslint-plugin-jsx-a11y@6` does not yet publish an ESLint 10 peer range, while the rest of this stack is already on ESLint 10.
+The published package now exports a reusable Remark preset from `preset.mjs`.
+The local `eslint.config.mjs` only consumes the external shared ESLint config
+for repository linting; it is no longer part of the package runtime surface.

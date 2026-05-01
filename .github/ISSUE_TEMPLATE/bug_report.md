@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a reproducible bug in eslint-plugin-tsconfig
+about: Report a reproducible bug in remark-config-nick2bad4u
 title: "Bug: "
 labels:
     - bug
@@ -12,28 +12,28 @@ assignees: []
 
 <!-- Briefly describe the bug and impact. -->
 
-## Rule / Area
+## Config area
 
-<!-- Example: prefer-ts-extras-array-at, docs/docusaurus, presets, runtime API docs -->
+<!-- Example: heading rules, link validation, table formatting, package exports -->
 
 ## Reproduction
 
-### Flat config snippet
+### Remark config snippet
 
 ```mjs
-// Minimal eslint.config.mjs (or relevant excerpt)
+// Minimal .remarkrc.mjs (or relevant excerpt)
 ```
 
-### Minimal code sample
+### Minimal Markdown sample
 
-```ts
+```md
 // Minimal reproducible input
 ```
 
 ### Command and output
 
 ```bash
-# Example: npm run test -- test/prefer-ts-extras-array-at.test.ts
+# Example: npm run lint:remark -- README.md
 ```
 
 ## Steps to reproduce
@@ -50,10 +50,9 @@ assignees: []
 
 - Node.js version:
 - npm version:
-- ESLint version:
-- TypeScript version:
-- `@typescript-eslint/*` version:
-- `eslint-plugin-tsconfig` version/commit:
+- Remark version:
+- remark-cli version:
+- `remark-config-nick2bad4u` version/commit:
 - OS:
 
 ## Additional context

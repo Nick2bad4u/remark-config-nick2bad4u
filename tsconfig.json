@@ -96,14 +96,14 @@
         ".cache/**",
         "coverage/**",
         "dist/**",
-        "docs/docusaurus/.docusaurus/**",
-        "docs/docusaurus/build/**",
         "eslint.config.bundled_*.mjs",
         "node_modules/**",
         "test/fixtures/**"
     ],
     "include": [
         "index.d.ts",
+        "preset.d.mts",
+        "remark-plugin-shims.d.ts",
         "test/**/*.d.ts",
         "test/**/*.ts",
         "vite.config.ts"

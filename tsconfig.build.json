@@ -22,8 +22,6 @@
     "exclude": [
         ".cache/**",
         "dist/**",
-        "docs/docusaurus/.docusaurus/**",
-        "docs/docusaurus/build/**",
         "eslint.config.bundled_*.mjs",
         "node_modules/**",
         "test/fixtures/**"
@@ -31,6 +29,8 @@
     "extends": "./tsconfig.json",
     "include": [
         "index.d.ts",
+        "preset.d.mts",
+        "remark-plugin-shims.d.ts",
         "eslint.config.mjs",
         "preset.mjs"
     ]

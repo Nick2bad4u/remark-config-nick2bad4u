@@ -64,7 +64,7 @@ const typecheckTestFilePatterns = [
 ];
 
 /**
- * Vitest configuration for eslint-config-nick2bad4u.
+ * Vitest configuration for remark-config-nick2bad4u.
  */
 const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
     cacheDir: "./.cache/vitest",
@@ -144,7 +144,7 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
                 ...coverageConfigDefaults.exclude,
             ],
             excludeAfterRemap: true, // Exclude files after remapping for accuracy
-            include: ["eslint.config.mjs", "preset.mjs"],
+            include: ["preset.mjs"],
             // V8 Provider Configuration (Recommended since Vitest v3.2.0)
             provider: "v8" as const, // Switch to V8 for better TypeScript support
             reporter: [
@@ -156,7 +156,7 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
 
             reportOnFailure: true,
             reportsDirectory: "./coverage",
-            skipFull: true, // Don't skip full coverage collection
+            skipFull: true, // Keep release reports focused on actionable coverage gaps.
             // NOTE: Coverage thresholds adjusted after empirical analysis of current
             // instrumentation (November 2025). JSX-heavy components and patched CSS
             // modules generate synthetic branches that Vitest counts but cannot be

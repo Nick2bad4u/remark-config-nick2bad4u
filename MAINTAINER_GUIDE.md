@@ -1,64 +1,46 @@
-## Maintainer guide: rules, plugins, and without presets
+# Maintainer guide: shared Remark preset
 
-### 1) Add or edit rules
+## 1) Add or edit Remark rules
 
-1. Open `eslint.config.mjs`.
-2. Locate the nearest matching config block by `files`/`name`.
-3. Prefer updating existing scoped blocks over adding broad global rules.
-4. Use actionable comments for non-obvious rule decisions.
-5. If a rule needs type info, keep it in a TypeScript parser block with project service or explicit `project` paths.
+1. Open `preset.mjs`.
+2. Import the Remark plugin implementation directly from its package.
+3. Add the plugin function, or `[plugin, options]` tuple, to `sharedPlugins`.
+4. Keep `remark-preset-prettier` last by appending project-specific plugins
+   through `createConfig` before that final preset.
+5. Add or update tests in `test/preset.test.ts` when public API behavior,
+   plugin ordering, or config defaults change.
 
-### 2) Add a new plugin package
+Do not export string plugin names from the shared preset. Direct imports are
+required so downstream projects can consume the config without installing every
+individual Remark plugin as a direct dependency.
+
+## 2) Add a new plugin dependency
 
 1. Add the plugin package to `dependencies` in `package.json`.
-2. Import it in `eslint.config.mjs`.
-3. Register it inside the appropriate `plugins` map.
-4. Add/adjust rules using that plugin's namespace.
-5. Decide whether the plugin should have a dedicated `without*` preset.
+2. Import it in `preset.mjs`.
+3. Configure it in `sharedPlugins` with conservative defaults.
+4. Document noteworthy behavior or intentionally disabled rules in `README.md`.
+5. Run package validation because dependency and public package surfaces changed.
 
-### 3) Add a new `without*` preset
+## 3) Add a project-specific override example
 
-Use this when consumers need to dogfood local plugin builds or disable packaged plugin rules.
-
-1. In `eslint.config.mjs`, add a preset entry under exported `configs`:
-
-```js
-withoutMyPlugin: createConfig({
-    plugins: {
-        "my-plugin": false,
-    },
-}),
-```
-
-2. In `preset.mjs`, re-export the new preset from `sharedConfigs`.
-3. In `index.d.ts`, add the preset property to `Nick2Bad4UEslintConfigPresets`.
-4. In `test/preset.test.ts`, add the preset/plugin namespace pair to the `it.each` matrix.
-5. In `README.md`, document the new preset in the presets list.
-
-### 4) Dogfood a local plugin in a consumer repo
-
-Use the matching `without*` preset, then append your local plugin registration and rules:
+Prefer documenting overrides with `createConfig` instead of adding package-level
+presets for every downstream repository:
 
 ```js
-import nick2bad4u from "eslint-config-nick2bad4u";
-import localPlugin from "./plugin.mjs";
+import { createConfig } from "remark-config-nick2bad4u";
 
-export default [
-    ...nick2bad4u.configs.withoutMyPlugin,
-    {
-        files: ["src/**/*.{ts,tsx,mts,cts,js,mjs,cjs}"],
-        name: "Local MyPlugin rules",
-        plugins: {
-            "my-plugin": localPlugin,
-        },
-        rules: {
-            ...localPlugin.configs.recommended.rules,
-        },
+export default createConfig({
+    settings: {
+        rule: "*",
     },
-];
+    plugins: [
+        // Local Remark plugins go here.
+    ],
+});
 ```
 
-### 5) Validation checklist (required)
+## 4) Validation checklist (required)
 
 Run before pushing:
 
@@ -73,4 +55,5 @@ Optional release notes preview:
 npm run changelog:preview
 ```
 
-If `git-cliff` reports missing refs locally, ensure your local branch has at least one commit and tracks the expected branch ref.
+If `git-cliff` reports missing refs locally, ensure your local branch has at
+least one commit and tracks the expected branch ref.

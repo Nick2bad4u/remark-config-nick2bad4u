@@ -1,7 +1,7 @@
 ---
 name: "Generated-And-Workspace-Folders-Guidelines"
 description: "Quick guidance for caches, temporary folders, generated outputs, editor folders, and installed dependencies."
-applyTo: ".cache/**, temp/**, dist/**, coverage/**, .vite/**, .turbo/**, docs/docusaurus/build/**, docs/docusaurus/.docusaurus/**, docs/docusaurus/node_modules/**, node_modules/**, .vscode/**"
+applyTo: ".cache/**, temp/**, dist/**, coverage/**, .vite/**, .turbo/**, node_modules/**, .vscode/**"
 ---
 
 # Generated, Cache, Dependency, and Workspace Folders
@@ -31,10 +31,7 @@ These folders are usually infrastructure, not hand-authored source.
 - `coverage/`
   - Generated test and benchmark reports.
   - Useful for inspection, not manual authoring.
-- `docs/docusaurus/build/`, `docs/docusaurus/.docusaurus/`
-  - Generated site build/runtime internals.
-  - Do not patch manually to fix docs problems; update source docs, config, or theme code instead.
-- `node_modules/`, `docs/docusaurus/node_modules/`
+- `node_modules/`
   - Installed dependencies.
   - Never hand-edit vendored dependency files unless the task is explicitly about patching dependencies locally.
 - `.vscode/`

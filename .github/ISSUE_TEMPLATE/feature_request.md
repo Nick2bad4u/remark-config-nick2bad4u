@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest a new rule or improvement for eslint-plugin-tsconfig
+about: Suggest a new rule or improvement for remark-config-nick2bad4u
 title: "Feature: "
 labels:
     - enhancement
@@ -14,13 +14,13 @@ assignees: []
 
 ## Proposed solution
 
-<!-- Describe expected behavior, messages, and fixer/suggestion expectations. -->
+<!-- Describe expected behavior and whether Remark should report or rewrite it. -->
 
 ## Scope
 
-- Type: New rule / Rule enhancement / Config preset / Docs / Tooling
-- Affected rule IDs (if any):
-- Requires type checking?: Yes / No / Unsure
+- Type: New Remark rule / Rule option change / Config preset / Docs / Tooling
+- Affected Remark plugins or rule IDs (if any):
+- Requires network access?: Yes / No / Unsure
 
 ## Alternatives considered
 
@@ -28,19 +28,19 @@ assignees: []
 
 ### Before
 
-```ts
-// Code that should be reported (if applicable)
+```md
+<!-- Markdown that should be reported (if applicable) -->
 ```
 
 ### After
 
-```ts
-// Desired code after fix/suggestion
+```md
+<!-- Desired Markdown after rewrite or manual fix -->
 ```
 
 ## Acceptance criteria
 
-- [ ] Clear, actionable diagnostic message(s)
-- [ ] Safe autofix or suggestion behavior defined
-- [ ] Test coverage plan (valid/invalid/edge/fixer)
-- [ ] Documentation impact identified (`docs/rules/<rule-id>.md` if rule-related)
+- [ ] Clear, actionable diagnostic behavior
+- [ ] Safe rewrite behavior, or explicit no-fix rationale
+- [ ] Test coverage plan
+- [ ] Documentation impact identified
