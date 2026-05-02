@@ -20,13 +20,12 @@ $names = @(
 $keep = @("remark", "remark-cli", "remark-config-nick2bad4u")
 $remove = $names | Where-Object {
   (
-    $_ -match '^remark($|-)'
-    -or $_ -eq 'unified'
+    ($_ -match '^remark($|-)') -or ($_ -eq 'unified')
   ) -and ($_ -notin $keep)
 }
 
 if ($remove.Count -gt 0) {
-  npm uninstall $remove
+  npm uninstall $remove --force
 } else {
   Write-Host "No managed remark deps found to remove."
 }
@@ -65,6 +64,29 @@ const remarkConfig = createConfig({
         // [myRemarkPlugin, myOptions], // your plugin override here
     ],
 });
+
+export default remarkConfig;
+'@ | Set-Content .\.remarkrc.mjs -Encoding UTF8
+```
+
+**Alternative:** spread style config if you only need to override settings and not plugins.
+
+```powershell
+@'
+import { preset } from "remark-config-nick2bad4u";
+
+/**
+ * @type {import("remark-config-nick2bad4u").RemarkConfig}
+ */
+const remarkConfig = {
+    ...preset,
+    settings: {
+        ...preset.settings,
+        // rule: "*",        // your override here
+        // bullet: "*",      // your override here
+        // emphasis: "*",    // your override here
+    },
+};
 
 export default remarkConfig;
 '@ | Set-Content .\.remarkrc.mjs -Encoding UTF8
