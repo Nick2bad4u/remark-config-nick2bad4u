@@ -27,6 +27,7 @@
         "*.mjs",
         "*.ts",
         ".remarkrc.mjs",
+        "preset.mjs",
         "test/**/*.d.ts",
         "test/**/*.mjs",
         "test/**/*.ts",

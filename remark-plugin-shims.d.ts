@@ -1,4 +1,4 @@
-type RemarkPlugin = import("unified").Plugin;
+import type { Plugin as RemarkPlugin } from "unified";
 
 declare module "remark-lint-check-toc" {
     const plugin: RemarkPlugin;

@@ -105,4 +105,4 @@ Prettier, package sorting/linting, `publint`, ATTW in ESM-only mode, YAML lint,
 and Secretlint. Release notes are generated with `git-cliff` via the
 `changelog:*` scripts.
 
-For maintainers, see [MAINTAINER_GUIDE.md](./MAINTAINER_GUIDE.md).
+For maintainers, see [MAINTAINER\_GUIDE.md](./MAINTAINER_GUIDE.md).

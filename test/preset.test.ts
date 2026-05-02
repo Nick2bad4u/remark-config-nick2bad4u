@@ -1,37 +1,32 @@
 import type { Preset } from "unified";
 
 import { remark } from "remark";
-import preset, {
-    createConfig,
-    preset as namedPreset,
-    presets,
-    type RemarkPluginEntry,
-} from "remark-config-nick2bad4u";
+import * as packageExports from "remark-config-nick2bad4u";
 import { describe, expect, it } from "vitest";
 
-import localPreset from "../preset.mjs";
-
-const isStringPluginEntry = (entry: RemarkPluginEntry): boolean =>
-    typeof entry === "string" ||
-    (Array.isArray(entry) && typeof entry[0] === "string");
+import preset from "../preset.mjs";
 
 describe("remark-config-nick2bad4u preset", () => {
     it("exports the shared preset as the default and named recommended preset", () => {
         expect.assertions(6);
 
-        expect(preset).toBe(namedPreset);
-        expect(preset).toBe(localPreset);
-        expect(presets.all).toBe(namedPreset);
-        expect(presets.recommended).toBe(namedPreset);
-        expect(preset.plugins?.length ?? 0).toBeGreaterThan(0);
-        expect(preset.settings?.gfm).toBeTruthy();
+        expect(packageExports.default).toBe(packageExports.preset);
+        expect(packageExports.preset).toBe(preset);
+        expect(packageExports.presets.all).toBe(packageExports.preset);
+        expect(packageExports.presets.recommended).toBe(packageExports.preset);
+        expect(packageExports.preset.plugins?.length ?? 0).toBeGreaterThan(0);
+        expect(packageExports.preset.settings?.gfm).toBeTruthy();
     });
 
     it("exports imported plugin implementations instead of string plugin names", () => {
         expect.assertions(1);
 
-        const stringPluginEntries = (preset.plugins ?? []).filter((entry) =>
-            isStringPluginEntry(entry)
+        const stringPluginEntries = (
+            packageExports.preset.plugins ?? []
+        ).filter(
+            (entry) =>
+                typeof entry === "string" ||
+                (Array.isArray(entry) && typeof entry[0] === "string")
         );
 
         expect(stringPluginEntries).toStrictEqual([]);
@@ -41,7 +36,7 @@ describe("remark-config-nick2bad4u preset", () => {
         expect.assertions(5);
 
         const customPlugin = (): undefined => undefined;
-        const derivedConfig = createConfig({
+        const derivedConfig = packageExports.createConfig({
             plugins: [customPlugin],
             settings: {
                 gfm: false,
@@ -49,7 +44,7 @@ describe("remark-config-nick2bad4u preset", () => {
             },
         });
 
-        expect(derivedConfig).not.toBe(namedPreset);
+        expect(derivedConfig).not.toBe(packageExports.preset);
         expect(derivedConfig.settings.gfm).toBeFalsy();
         expect(derivedConfig.settings.rule).toBe("*");
         expect(derivedConfig.plugins).toContain(customPlugin);

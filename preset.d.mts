@@ -1,4 +1,4 @@
-import type { RemarkConfig, RemarkConfigOptions } from "./index.d.ts";
+import type { RemarkConfig, RemarkConfigOptions } from "./index";
 
 /** Create a Remark preset from the shared Nick2bad4u defaults. */
 export declare const createConfig: (

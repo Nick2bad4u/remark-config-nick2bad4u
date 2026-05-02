@@ -12,14 +12,17 @@
  */
 
 import remarkDirective from "remark-directive";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `ignoreEnd` in upstream types.
 import remarkIgnoreEnd from "remark-ignore/end";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `ignoreStart` in upstream types.
 import remarkIgnoreStart from "remark-ignore/start";
 import remarkInlineLinks from "remark-inline-links";
 import remarkLint from "remark-lint";
 import remarkLintBlockquoteIndentation from "remark-lint-blockquote-indentation";
-import remarkLintCheckToc from "remark-lint-check-toc";
+import remarkLintCheckTOC from "remark-lint-check-toc";
 import remarkLintCheckboxCharacterStyle from "remark-lint-checkbox-character-style";
 import remarkLintCheckboxContentIndent from "remark-lint-checkbox-content-indent";
 import remarkLintCodeBlockSplitList from "remark-lint-code-block-split-list";
@@ -41,11 +44,13 @@ import remarkLintFileExtension from "remark-lint-file-extension";
 import remarkLintFinalDefinition from "remark-lint-final-definition";
 import remarkLintFinalNewline from "remark-lint-final-newline";
 import remarkLintFirstHeadingLevel from "remark-lint-first-heading-level";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `remarkFrontmatterSchema` in upstream types.
 import remarkLintFrontmatterSchema from "remark-lint-frontmatter-schema";
 import remarkLintHardBreakSpaces from "remark-lint-hard-break-spaces";
 import remarkLintHeadingCapitalization from "remark-lint-heading-capitalization";
 import remarkLintHeadingIncrement from "remark-lint-heading-increment";
 import remarkLintHeadingStyle from "remark-lint-heading-style";
+// eslint-disable-next-line module-interop/no-import-cjs -- Package currently resolves as CommonJS in lint analysis.
 import remarkLintHeadingWhitespace from "remark-lint-heading-whitespace";
 import remarkLintLinebreakStyle from "remark-lint-linebreak-style";
 import remarkLintLinkTitleStyle from "remark-lint-link-title-style";
@@ -70,12 +75,15 @@ import remarkLintNoDuplicateDefinitions from "remark-lint-no-duplicate-definitio
 import remarkLintNoDuplicateHeadings from "remark-lint-no-duplicate-headings";
 import remarkLintNoDuplicateHeadingsInSection from "remark-lint-no-duplicate-headings-in-section";
 import remarkLintNoEmphasisAsHeading from "remark-lint-no-emphasis-as-heading";
+// eslint-disable-next-line module-interop/no-import-cjs -- Package currently resolves as CommonJS in lint analysis.
 import remarkLintNoEmptySections from "remark-lint-no-empty-sections";
 import remarkLintNoEmptyUrl from "remark-lint-no-empty-url";
 import remarkLintNoFileNameArticles from "remark-lint-no-file-name-articles";
 import remarkLintNoFileNameConsecutiveDashes from "remark-lint-no-file-name-consecutive-dashes";
 import remarkLintNoFileNameIrregularCharacters from "remark-lint-no-file-name-irregular-characters";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `remarkLintNofileNameMixedCase` in upstream types.
 import remarkLintNoFileNameMixedCase from "remark-lint-no-file-name-mixed-case";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `remarkLintNofileNameOuterDashes` in upstream types.
 import remarkLintNoFileNameOuterDashes from "remark-lint-no-file-name-outer-dashes";
 import remarkLintNoHeadingContentIndent from "remark-lint-no-heading-content-indent";
 import remarkLintNoHeadingIndent from "remark-lint-no-heading-indent";
@@ -106,15 +114,22 @@ import remarkLintTableCellPadding from "remark-lint-table-cell-padding";
 import remarkLintTablePipeAlignment from "remark-lint-table-pipe-alignment";
 import remarkLintTablePipes from "remark-lint-table-pipes";
 import remarkLintUnorderedListMarkerStyle from "remark-lint-unordered-list-marker-style";
+// eslint-disable-next-line module-interop/no-import-cjs -- Package currently resolves as CommonJS in lint analysis.
 import remarkLintWriteGood from "remark-lint-write-good";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkMath from "remark-math";
 import remarkPresetLintConsistent from "remark-preset-lint-consistent";
 import remarkPresetLintMarkdownStyleGuide from "remark-preset-lint-markdown-style-guide";
 import remarkPresetLintRecommended from "remark-preset-lint-recommended";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `_default` in upstream types.
 import remarkPresetPrettier from "remark-preset-prettier";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkToc from "remark-toc";
+// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkValidateLinks from "remark-validate-links";
-import remarkWikiLink from "remark-wiki-link";
+import wikiLinkPlugin from "remark-wiki-link";
+
+const remarkWikiLink = wikiLinkPlugin;
 
 /**
  * @typedef {object} RemarkSettings
@@ -311,7 +326,7 @@ const sharedPlugins = [
     [remarkLintTableCellPadding, false],
     remarkLintNoDuplicateDefinedUrls,
     remarkLintNoEmptyUrl,
-    remarkLintCheckToc,
+    remarkLintCheckTOC,
     [
         remarkToc,
         {
@@ -341,6 +356,7 @@ const sharedPlugins = [
  * @returns {RemarkConfig} Remark preset containing the shared defaults and any
  *   project-specific additions.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types -- JSDoc above documents the module boundary return type.
 export const createConfig = (options = {}) => ({
     plugins: [
         ...sharedPlugins,
