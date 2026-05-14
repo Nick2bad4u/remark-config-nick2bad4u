@@ -1,7 +1,7 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
     "name": "remark-config-nick2bad4u",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "private": false,
     "description": "Shared Remark configuration for Nick2bad4u projects.",
     "keywords": [
