@@ -1,5 +1,8 @@
 # remark-config-nick2bad4u
 
+[![CI](https://github.com/Nick2bad4u/remark-config-nick2bad4u/actions/workflows/ci.yml/badge.svg)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/remark-config-nick2bad4u.svg)](https://www.npmjs.com/package/remark-config-nick2bad4u)
+
 Shared Remark configuration for Nick2bad4u projects.
 
 ## Install

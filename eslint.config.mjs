@@ -1,8 +1,20 @@
-import nick2bad4u from "eslint-config-nick2bad4u";
+import nickTwoBadFourU from "eslint-config-nick2bad4u";
 
 /** @type {import("eslint").Linter.Config[]} */
 const config = [
-    ...nick2bad4u.configs.all,
+    ...nickTwoBadFourU.configs.all,
+
+    {
+        files: ["preset.mjs"],
+        languageOptions: {
+            parserOptions: {
+                project: false,
+                projectService: {
+                    allowDefaultProject: ["preset.mjs"],
+                },
+            },
+        },
+    },
 
     // Add repository-specific config entries below as needed.
 ];

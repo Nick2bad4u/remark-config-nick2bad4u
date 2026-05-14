@@ -1,4 +1,5 @@
 // @ts-check
+
 /**
  * Shared Remark configuration for Nick2bad4u projects.
  *
@@ -50,7 +51,6 @@ import remarkLintHardBreakSpaces from "remark-lint-hard-break-spaces";
 import remarkLintHeadingCapitalization from "remark-lint-heading-capitalization";
 import remarkLintHeadingIncrement from "remark-lint-heading-increment";
 import remarkLintHeadingStyle from "remark-lint-heading-style";
-// eslint-disable-next-line module-interop/no-import-cjs -- Package currently resolves as CommonJS in lint analysis.
 import remarkLintHeadingWhitespace from "remark-lint-heading-whitespace";
 import remarkLintLinebreakStyle from "remark-lint-linebreak-style";
 import remarkLintLinkTitleStyle from "remark-lint-link-title-style";
@@ -75,7 +75,6 @@ import remarkLintNoDuplicateDefinitions from "remark-lint-no-duplicate-definitio
 import remarkLintNoDuplicateHeadings from "remark-lint-no-duplicate-headings";
 import remarkLintNoDuplicateHeadingsInSection from "remark-lint-no-duplicate-headings-in-section";
 import remarkLintNoEmphasisAsHeading from "remark-lint-no-emphasis-as-heading";
-// eslint-disable-next-line module-interop/no-import-cjs -- Package currently resolves as CommonJS in lint analysis.
 import remarkLintNoEmptySections from "remark-lint-no-empty-sections";
 import remarkLintNoEmptyUrl from "remark-lint-no-empty-url";
 import remarkLintNoFileNameArticles from "remark-lint-no-file-name-articles";
@@ -114,7 +113,6 @@ import remarkLintTableCellPadding from "remark-lint-table-cell-padding";
 import remarkLintTablePipeAlignment from "remark-lint-table-pipe-alignment";
 import remarkLintTablePipes from "remark-lint-table-pipes";
 import remarkLintUnorderedListMarkerStyle from "remark-lint-unordered-list-marker-style";
-// eslint-disable-next-line module-interop/no-import-cjs -- Package currently resolves as CommonJS in lint analysis.
 import remarkLintWriteGood from "remark-lint-write-good";
 // eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkMath from "remark-math";
@@ -134,27 +132,28 @@ const remarkWikiLink = wikiLinkPlugin;
 /**
  * @typedef {object} RemarkSettings
  *
- * @property {"*" | "+" | "-"} [bullet]
- * @property {boolean} [closeAtx]
- * @property {boolean} [commonmark]
- * @property {"*" | "_"} [emphasis]
- * @property {"`" | "~"} [fence]
- * @property {boolean} [fences]
- * @property {boolean} [gfm]
- * @property {boolean} [incrementListMarker]
- * @property {"tab" | "one" | "mixed"} [listItemIndent]
- * @property {'"' | "'"} [quote]
- * @property {boolean} [referenceLinks]
- * @property {boolean} [resourceLink]
- * @property {string} [rule]
- * @property {number} [ruleRepetition]
- * @property {boolean} [ruleSpaces]
- * @property {boolean} [setext]
- * @property {"ordered"} [style]
- * @property {"*" | "_"} [strong]
- * @property {"***" | "---"} [thematicBreak]
- * @property {boolean} [tightDefinitions]
- * @property {boolean} [yaml]
+ * @property {"*" | "+" | "-"} [bullet] Preferred unordered-list marker.
+ * @property {boolean} [closeAtx] Whether to close ATX headings.
+ * @property {boolean} [commonmark] Whether to parse in CommonMark mode.
+ * @property {"*" | "_"} [emphasis] Preferred emphasis marker.
+ * @property {"`" | "~"} [fence] Preferred fenced-code marker.
+ * @property {boolean} [fences] Whether fenced code blocks are enabled.
+ * @property {boolean} [gfm] Whether GitHub Flavored Markdown is enabled.
+ * @property {boolean} [incrementListMarker] Whether ordered markers increment.
+ * @property {"tab" | "one" | "mixed"} [listItemIndent] List-item indentation
+ *   style.
+ * @property {'"' | "'"} [quote] Preferred quote marker.
+ * @property {boolean} [referenceLinks] Whether to prefer reference links.
+ * @property {boolean} [resourceLink] Whether to prefer resource links.
+ * @property {string} [rule] Marker used for thematic rules.
+ * @property {number} [ruleRepetition] Number of rule marker repetitions.
+ * @property {boolean} [ruleSpaces] Whether rules include internal spaces.
+ * @property {boolean} [setext] Whether setext headings are enabled.
+ * @property {"ordered"} [style] Ordered-list style preference.
+ * @property {"*" | "_"} [strong] Preferred strong marker.
+ * @property {"***" | "---"} [thematicBreak] Preferred thematic-break marker.
+ * @property {boolean} [tightDefinitions] Whether definitions are tight.
+ * @property {boolean} [yaml] Whether YAML frontmatter is enabled.
  */
 
 /** @typedef {unknown} RemarkPluginEntry */
@@ -163,8 +162,8 @@ const remarkWikiLink = wikiLinkPlugin;
 /**
  * @typedef {object} RemarkConfig
  *
- * @property {RemarkPluginList} plugins
- * @property {RemarkSettings} settings
+ * @property {RemarkPluginList} plugins Plugin pipeline passed to Unified.
+ * @property {RemarkSettings} settings Shared processor settings.
  */
 
 /**
@@ -351,12 +350,13 @@ const sharedPlugins = [
 /**
  * Create a Remark preset using the shared Nick2bad4u defaults.
  *
- * @param {RemarkConfigOptions} [options] Project-specific plugins and settings.
+ * @param {RemarkConfigOptions} [options] - Project-specific plugins and
+ *   settings.
  *
  * @returns {RemarkConfig} Remark preset containing the shared defaults and any
  *   project-specific additions.
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types -- JSDoc above documents the module boundary return type.
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types -- JSDoc above documents the module boundary return type.
 export const createConfig = (options = {}) => ({
     plugins: [
         ...sharedPlugins,
