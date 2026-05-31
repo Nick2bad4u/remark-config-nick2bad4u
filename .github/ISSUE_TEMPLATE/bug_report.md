@@ -3,8 +3,8 @@ name: Bug report
 about: Report a reproducible bug in remark-config-nick2bad4u
 title: "Bug: "
 labels:
-    - bug
-    - triage
+ - bug
+ - triage
 assignees: []
 ---
 

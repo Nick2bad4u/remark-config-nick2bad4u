@@ -4,18 +4,20 @@ import { remark } from "remark";
 import * as packageExports from "remark-config-nick2bad4u";
 import { describe, expect, it } from "vitest";
 
-import preset from "../preset.mjs";
+import * as sourceExports from "../src/preset";
 
 describe("remark-config-nick2bad4u preset", () => {
     it("exports the shared preset as the default and named recommended preset", () => {
-        expect.assertions(6);
+        expect.assertions(8);
 
         expect(packageExports.default).toBe(packageExports.preset);
-        expect(packageExports.preset).toBe(preset);
+        expect(packageExports.preset).toBe(packageExports.default);
         expect(packageExports.presets.all).toBe(packageExports.preset);
         expect(packageExports.presets.recommended).toBe(packageExports.preset);
         expect(packageExports.preset.plugins?.length ?? 0).toBeGreaterThan(0);
         expect(packageExports.preset.settings?.gfm).toBeTruthy();
+        expect(sourceExports.default).toBe(sourceExports.preset);
+        expect(sourceExports.presets.recommended).toBe(sourceExports.preset);
     });
 
     it("exports imported plugin implementations instead of string plugin names", () => {
@@ -33,7 +35,7 @@ describe("remark-config-nick2bad4u preset", () => {
     });
 
     it("supports derived project-specific settings and extra plugins", () => {
-        expect.assertions(5);
+        expect.assertions(7);
 
         const customPlugin = (): undefined => undefined;
         const derivedConfig = packageExports.createConfig({
@@ -49,13 +51,20 @@ describe("remark-config-nick2bad4u preset", () => {
         expect(derivedConfig.settings.rule).toBe("*");
         expect(derivedConfig.plugins).toContain(customPlugin);
         expect(derivedConfig.plugins.at(-2)).toBe(customPlugin);
+
+        const sourceDerivedConfig = sourceExports.createConfig({
+            plugins: [customPlugin],
+        });
+
+        expect(sourceDerivedConfig).not.toBe(sourceExports.preset);
+        expect(sourceDerivedConfig.plugins.at(-2)).toBe(customPlugin);
     });
 
     it("can be loaded by Remark without missing plugin dependencies", async () => {
         expect.assertions(1);
 
         const file = await remark()
-            .use(preset as Preset)
+            .use(packageExports.preset as Preset)
             .process({
                 path: "readme.md",
                 value: "# Project\n\nParagraph text.\n",

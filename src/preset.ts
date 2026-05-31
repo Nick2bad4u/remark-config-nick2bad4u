@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * Shared Remark configuration for Nick2bad4u projects.
  *
@@ -8,9 +6,17 @@
  * without requiring every Remark plugin to be installed as a direct dependency
  * in each consumer repository.
  *
- * @see {@link https://github.com/remarkjs/remark-lint}
- * @see {@link https://github.com/remarkjs/remark-gfm}
+ * @see https://github.com/remarkjs/remark-lint
+ * @see https://github.com/remarkjs/remark-gfm
  */
+
+import type {
+    Pluggable,
+    PluggableList,
+    Plugin,
+    Preset,
+    Settings,
+} from "unified";
 
 import remarkDirective from "remark-directive";
 // eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
@@ -128,55 +134,87 @@ import remarkValidateLinks from "remark-validate-links";
 import wikiLinkPlugin from "remark-wiki-link";
 
 const remarkWikiLink = wikiLinkPlugin;
+// These upstream plugins/presets are valid Unified pluggables at runtime, but
+// their published types are narrower than `Pluggable`/`Preset`.
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- `remark-ignore` exports a zero-parameter plugin that Unified can still consume.
+const remarkIgnoreEndPlugin = remarkIgnoreEnd as unknown as Pluggable;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- `remark-ignore` exports a zero-parameter plugin that Unified can still consume.
+const remarkIgnoreStartPlugin = remarkIgnoreStart as unknown as Pluggable;
+const remarkLintFrontmatterSchemaPlugin =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- The plugin works with `false` to disable schema checks in this preset.
+    remarkLintFrontmatterSchema as unknown as Plugin;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- The package exports a preset object whose declarations include disabled entries.
+const remarkPresetPrettierPlugin = remarkPresetPrettier as Preset;
 
-/**
- * @typedef {object} RemarkSettings
- *
- * @property {"*" | "+" | "-"} [bullet] Preferred unordered-list marker.
- * @property {boolean} [closeAtx] Whether to close ATX headings.
- * @property {boolean} [commonmark] Whether to parse in CommonMark mode.
- * @property {"*" | "_"} [emphasis] Preferred emphasis marker.
- * @property {"`" | "~"} [fence] Preferred fenced-code marker.
- * @property {boolean} [fences] Whether fenced code blocks are enabled.
- * @property {boolean} [gfm] Whether GitHub Flavored Markdown is enabled.
- * @property {boolean} [incrementListMarker] Whether ordered markers increment.
- * @property {"tab" | "one" | "mixed"} [listItemIndent] List-item indentation
- *   style.
- * @property {'"' | "'"} [quote] Preferred quote marker.
- * @property {boolean} [referenceLinks] Whether to prefer reference links.
- * @property {boolean} [resourceLink] Whether to prefer resource links.
- * @property {string} [rule] Marker used for thematic rules.
- * @property {number} [ruleRepetition] Number of rule marker repetitions.
- * @property {boolean} [ruleSpaces] Whether rules include internal spaces.
- * @property {boolean} [setext] Whether setext headings are enabled.
- * @property {"ordered"} [style] Ordered-list style preference.
- * @property {"*" | "_"} [strong] Preferred strong marker.
- * @property {"***" | "---"} [thematicBreak] Preferred thematic-break marker.
- * @property {boolean} [tightDefinitions] Whether definitions are tight.
- * @property {boolean} [yaml] Whether YAML frontmatter is enabled.
- */
+/** Remark preset exported by this package. */
+export interface RemarkConfig extends Preset {
+    /** Plugin pipeline passed to Unified. */
+    readonly plugins: PluggableList;
+    /** Shared processor settings. */
+    readonly settings: RemarkSettings;
+}
 
-/** @typedef {unknown} RemarkPluginEntry */
-/** @typedef {RemarkPluginEntry[]} RemarkPluginList */
+/** Options for creating a derived Remark preset. */
+export interface RemarkConfigOptions {
+    /** Additional plugins appended before `remark-preset-prettier`. */
+    readonly plugins?: PluggableList;
+    /** Settings merged over the shared defaults. */
+    readonly settings?: Readonly<Partial<RemarkSettings>>;
+}
 
-/**
- * @typedef {object} RemarkConfig
- *
- * @property {RemarkPluginList} plugins Plugin pipeline passed to Unified.
- * @property {RemarkSettings} settings Shared processor settings.
- */
+/** Remark plugin, plugin tuple, or preset entry accepted by Unified. */
+export type RemarkPluginEntry = Pluggable;
 
-/**
- * @typedef {object} RemarkConfigOptions
- *
- * @property {RemarkPluginList} [plugins] Additional plugins appended after the
- *   shared preset and before `remark-preset-prettier`.
- * @property {Partial<RemarkSettings>} [settings] Settings merged over the
- *   shared defaults.
- */
+/** Shared Remark processor settings used by the Nick2bad4u preset. */
+export interface RemarkSettings extends Settings {
+    /** Preferred unordered-list marker. */
+    readonly bullet?: "*" | "+" | "-";
+    /** Whether to close ATX headings. */
+    readonly closeAtx?: boolean;
+    /** Whether to parse in CommonMark mode. */
+    readonly commonmark?: boolean;
+    /** Preferred emphasis marker. */
+    readonly emphasis?: "*" | "_";
+    /** Preferred fenced-code marker. */
+    readonly fence?: "`" | "~";
+    /** Whether fenced code blocks are enabled. */
+    readonly fences?: boolean;
+    /** Whether GitHub Flavored Markdown is enabled. */
+    readonly gfm?: boolean;
+    /** Whether ordered markers increment. */
+    readonly incrementListMarker?: boolean;
+    /** List-item indentation style. */
+    readonly listItemIndent?: "mixed" | "one" | "tab";
+    /** Preferred quote marker. */
+    readonly quote?: "'" | '"';
+    /** Whether to prefer reference links. */
+    readonly referenceLinks?: boolean;
+    /** Whether to prefer resource links. */
+    readonly resourceLink?: boolean;
+    /** Marker used for thematic rules. */
+    readonly rule?: "*" | "-" | "_" | null;
+    /** Number of rule marker repetitions. */
+    readonly ruleRepetition?: number;
+    /** Whether rules include internal spaces. */
+    readonly ruleSpaces?: boolean;
+    /** Whether setext headings are enabled. */
+    readonly setext?: boolean;
+    /** Preferred strong marker. */
+    readonly strong?: "*" | "_";
+    /** Ordered-list style preference. */
+    readonly style?: "ordered";
 
-/** @type {RemarkSettings} */
-const defaultSettings = Object.freeze({
+    /** Preferred thematic-break marker. */
+    readonly thematicBreak?: "***" | "---";
+
+    /** Whether definitions are tight. */
+    readonly tightDefinitions?: boolean;
+
+    /** Whether YAML frontmatter is enabled. */
+    readonly yaml?: boolean;
+}
+
+const defaultSettings: Readonly<RemarkSettings> = Object.freeze({
     bullet: "-",
     closeAtx: false,
     commonmark: false,
@@ -222,9 +260,8 @@ const writeGoodOptions = Object.freeze({
     ]),
 });
 
-/** @type {RemarkPluginList} */
-const sharedPlugins = [
-    remarkIgnoreStart,
+const sharedPlugins: PluggableList = [
+    remarkIgnoreStartPlugin,
     remarkFrontmatter,
     remarkGfm,
     remarkLint,
@@ -343,25 +380,25 @@ const sharedPlugins = [
     [remarkLintMdxJsxShorthandAttribute, true],
     remarkLintMdxJsxUniqueAttributeName,
     [remarkLintNoUndefinedReferences, false],
-    [remarkLintFrontmatterSchema, false],
-    remarkIgnoreEnd,
+    [remarkLintFrontmatterSchemaPlugin, false],
+    remarkIgnoreEndPlugin,
 ];
 
 /**
  * Create a Remark preset using the shared Nick2bad4u defaults.
  *
- * @param {RemarkConfigOptions} [options] - Project-specific plugins and
- *   settings.
+ * @param options - Project-specific plugins and settings.
  *
- * @returns {RemarkConfig} Remark preset containing the shared defaults and any
+ * @returns Remark preset containing the shared defaults and any
  *   project-specific additions.
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types -- JSDoc above documents the module boundary return type.
-export const createConfig = (options = {}) => ({
+export const createConfig = (
+    options: Readonly<RemarkConfigOptions> = {}
+): RemarkConfig => ({
     plugins: [
         ...sharedPlugins,
         ...(options.plugins ?? []),
-        remarkPresetPrettier,
+        remarkPresetPrettierPlugin,
     ],
     settings: {
         ...defaultSettings,
@@ -370,10 +407,13 @@ export const createConfig = (options = {}) => ({
 });
 
 /** Shared recommended Remark preset. */
-export const preset = Object.freeze(createConfig());
+export const preset: RemarkConfig = Object.freeze(createConfig());
 
 /** Named Remark presets exposed for conventional config-package imports. */
-export const presets = Object.freeze({
+export const presets: {
+    readonly all: RemarkConfig;
+    readonly recommended: RemarkConfig;
+} = Object.freeze({
     all: preset,
     recommended: preset,
 });

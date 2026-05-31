@@ -13,6 +13,7 @@
         "moduleResolution": "NodeNext",
         "noEmit": false,
         "outDir": "./dist",
+        "rootDir": "./src",
         "sourceMap": true,
         "tsBuildInfoFile": "./.cache/tsbuildinfo/tsconfig.build.tsbuildinfo",
         "types": [
@@ -28,10 +29,7 @@
     ],
     "extends": "./tsconfig.json",
     "include": [
-        "index.d.ts",
-        "preset.d.mts",
-        "remark-plugin-shims.d.ts",
-        "eslint.config.mjs",
-        "preset.mjs"
+        "src/**/*.ts",
+        "types/**/*.d.ts"
     ]
 }

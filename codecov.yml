@@ -25,7 +25,7 @@ component_management:
         - component_id: package_entry
           name: "Package entrypoint"
           paths:
-              - preset.mjs
+              - src/preset.ts
 
 coverage:
     precision: 2
@@ -45,17 +45,17 @@ flags:
     os-linux:
         carryforward: true
         paths:
-            - preset.mjs
+            - src/preset.ts
 
     os-macos:
         carryforward: true
         paths:
-            - preset.mjs
+            - src/preset.ts
 
     os-windows:
         carryforward: true
         paths:
-            - preset.mjs
+            - src/preset.ts
 
 ignore:
     - "benchmarks/**"

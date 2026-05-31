@@ -28,10 +28,10 @@ Then add scripts similar to these:
 
 ```json
 {
-    "scripts": {
-        "lint:remark": "remark . --frail --ignore-path .remarkignore",
-        "lint:remark:fix": "remark . --ignore-path .remarkignore --output"
-    }
+ "scripts": {
+  "lint:remark": "remark . --frail --ignore-path .remarkignore",
+  "lint:remark:fix": "remark . --ignore-path .remarkignore --output"
+ }
 }
 ```
 
@@ -47,14 +47,14 @@ keeping the shared preset as the base:
 import { createConfig } from "remark-config-nick2bad4u";
 
 export default createConfig({
-    settings: {
-        gfm: true,
-        rule: "*",
-    },
-    plugins: [
-        // Project-specific Remark plugins go here. They are inserted before
-        // remark-preset-prettier so formatting normalization still runs last.
-    ],
+ settings: {
+  gfm: true,
+  rule: "*",
+ },
+ plugins: [
+  // Project-specific Remark plugins go here. They are inserted before
+  // remark-preset-prettier so formatting normalization still runs last.
+ ],
 });
 ```
 
@@ -96,6 +96,10 @@ network-dependent checks.
 
 ## Local development
 
+The preset is authored in `src/preset.ts`. `npm run build` compiles the
+published runtime and declarations into `dist/`, which is what the package
+exports and what this repository's `.remarkrc.mjs` loads.
+
 Use the aggregate scripts before publishing or opening a pull request:
 
 ```sh
@@ -108,4 +112,4 @@ Prettier, package sorting/linting, `publint`, ATTW in ESM-only mode, YAML lint,
 and Secretlint. Release notes are generated with `git-cliff` via the
 `changelog:*` scripts.
 
-For maintainers, see [MAINTAINER\_GUIDE.md](./MAINTAINER_GUIDE.md).
+For maintainers, see [MAINTAINER_GUIDE.md](./MAINTAINER_GUIDE.md).

@@ -2,7 +2,7 @@
 
 ## 1) Add or edit Remark rules
 
-1. Open `preset.mjs`.
+1. Open `src/preset.ts`.
 2. Import the Remark plugin implementation directly from its package.
 3. Add the plugin function, or `[plugin, options]` tuple, to `sharedPlugins`.
 4. Keep `remark-preset-prettier` last by appending project-specific plugins
@@ -17,7 +17,7 @@ individual Remark plugin as a direct dependency.
 ## 2) Add a new plugin dependency
 
 1. Add the plugin package to `dependencies` in `package.json`.
-2. Import it in `preset.mjs`.
+2. Import it in `src/preset.ts`.
 3. Configure it in `sharedPlugins` with conservative defaults.
 4. Document noteworthy behavior or intentionally disabled rules in `README.md`.
 5. Run package validation because dependency and public package surfaces changed.
@@ -31,12 +31,12 @@ presets for every downstream repository:
 import { createConfig } from "remark-config-nick2bad4u";
 
 export default createConfig({
-    settings: {
-        rule: "*",
-    },
-    plugins: [
-        // Local Remark plugins go here.
-    ],
+ settings: {
+  rule: "*",
+ },
+ plugins: [
+  // Local Remark plugins go here.
+ ],
 });
 ```
 
