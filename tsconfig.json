@@ -76,8 +76,14 @@
             "remark-lint-heading-whitespace": [
                 "./types/remark-lint-heading-whitespace.d.ts"
             ],
+            "remark-lint-match-punctuation": [
+                "./types/remark-lint-match-punctuation.d.ts"
+            ],
             "remark-lint-no-empty-sections": [
                 "./types/remark-lint-no-empty-sections.d.ts"
+            ],
+            "remark-lint-no-repeat-punctuation": [
+                "./types/remark-lint-no-repeat-punctuation.d.ts"
             ],
             "remark-lint-write-good": [
                 "./types/remark-lint-write-good.d.ts"

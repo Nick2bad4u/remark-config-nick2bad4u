@@ -58,12 +58,14 @@ import remarkLintHeadingCapitalization from "remark-lint-heading-capitalization"
 import remarkLintHeadingIncrement from "remark-lint-heading-increment";
 import remarkLintHeadingStyle from "remark-lint-heading-style";
 import remarkLintHeadingWhitespace from "remark-lint-heading-whitespace";
+import remarkLintHeadingWordLength from "remark-lint-heading-word-length";
 import remarkLintLinebreakStyle from "remark-lint-linebreak-style";
 import remarkLintLinkTitleStyle from "remark-lint-link-title-style";
 import remarkLintListItemBulletIndent from "remark-lint-list-item-bullet-indent";
 import remarkLintListItemContentIndent from "remark-lint-list-item-content-indent";
 import remarkLintListItemIndent from "remark-lint-list-item-indent";
 import remarkLintListItemSpacing from "remark-lint-list-item-spacing";
+import remarkLintMatchPunctuation from "remark-lint-match-punctuation";
 import remarkLintMaximumHeadingLength from "remark-lint-maximum-heading-length";
 import remarkLintMaximumLineLength from "remark-lint-maximum-line-length";
 import remarkLintMdxJsxAttributeSort from "remark-lint-mdx-jsx-attribute-sort";
@@ -101,6 +103,7 @@ import remarkLintNoMissingBlankLines from "remark-lint-no-missing-blank-lines";
 import remarkLintNoMultipleToplevelHeadings from "remark-lint-no-multiple-toplevel-headings";
 import remarkLintNoParagraphContentIndent from "remark-lint-no-paragraph-content-indent";
 import remarkLintNoReferenceLikeUrl from "remark-lint-no-reference-like-url";
+import remarkLintNoRepeatPunctuation from "remark-lint-no-repeat-punctuation";
 import remarkLintNoShellDollars from "remark-lint-no-shell-dollars";
 import remarkLintNoShortcutReferenceImage from "remark-lint-no-shortcut-reference-image";
 import remarkLintNoShortcutReferenceLink from "remark-lint-no-shortcut-reference-link";
@@ -349,9 +352,24 @@ const sharedPlugins: PluggableList = [
         remarkLintFileExtension,
         { allowExtensionless: false, extensions: ["mdx", "md"] },
     ],
+    [
+        remarkLintMatchPunctuation,
+        [
+            "“”",
+            "‘’",
+            "«»",
+            "‹›",
+        ],
+    ],
+    [remarkLintNoRepeatPunctuation, ",，。·"],
+    // Set a very high maximum line length to avoid conflicts with prettier and eslint comment length plugins /
+    // settings.
     [remarkLintMaximumLineLength, 5000],
-    [remarkLintMaximumHeadingLength, 120],
+    // Set a very high maximum heading length to avoid conflicts with `remark-lint-heading-word-length`,
+    // which provides more precise control over heading word counts.
+    [remarkLintMaximumHeadingLength, 600],
     [remarkLintHeadingCapitalization, false],
+    [remarkLintHeadingWordLength, { maximumWords: 16, minimumWords: 1 }],
     [remarkLintListItemSpacing, true],
     [remarkLintEmphasisMarker, "consistent"],
     [remarkLintStrikethroughMarker, "consistent"],
