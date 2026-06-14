@@ -16,7 +16,7 @@ describe("remark-config-nick2bad4u preset", () => {
         expect(packageExports.presets.all).toBe(packageExports.preset);
         expect(packageExports.presets.recommended).toBe(packageExports.preset);
         expect(packageExports.preset.plugins?.length ?? 0).toBeGreaterThan(0);
-        expect(packageExports.preset.settings?.gfm).toBeTruthy();
+        expect(packageExports.preset.settings?.gfm).toBe(true);
         expect(sourceExports.default).toBe(sourceExports.preset);
         expect(sourceExports.presets.recommended).toBe(sourceExports.preset);
     });
@@ -48,7 +48,7 @@ describe("remark-config-nick2bad4u preset", () => {
         });
 
         expect(derivedConfig).not.toBe(packageExports.preset);
-        expect(derivedConfig.settings.gfm).toBeFalsy();
+        expect(derivedConfig.settings.gfm).toBe(false);
         expect(derivedConfig.settings.rule).toBe("*");
         expect(derivedConfig.plugins).toContain(customPlugin);
         expect(derivedConfig.plugins.at(-2)).toBe(customPlugin);

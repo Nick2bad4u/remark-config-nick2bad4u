@@ -9,6 +9,7 @@
  * @see https://github.com/remarkjs/remark-lint
  * @see https://github.com/remarkjs/remark-gfm
  */
+/* eslint-disable import-x/max-dependencies -- This shared preset intentionally imports every bundled Remark plugin implementation. */
 
 import type {
     Pluggable,
@@ -19,12 +20,9 @@ import type {
 } from "unified";
 
 import remarkDirective from "remark-directive";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `ignoreEnd` in upstream types.
 import remarkIgnoreEnd from "remark-ignore/end";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `ignoreStart` in upstream types.
 import remarkIgnoreStart from "remark-ignore/start";
 import remarkInlineLinks from "remark-inline-links";
 import remarkLint from "remark-lint";
@@ -51,7 +49,6 @@ import remarkLintFileExtension from "remark-lint-file-extension";
 import remarkLintFinalDefinition from "remark-lint-final-definition";
 import remarkLintFinalNewline from "remark-lint-final-newline";
 import remarkLintFirstHeadingLevel from "remark-lint-first-heading-level";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `remarkFrontmatterSchema` in upstream types.
 import remarkLintFrontmatterSchema from "remark-lint-frontmatter-schema";
 import remarkLintHardBreakSpaces from "remark-lint-hard-break-spaces";
 import remarkLintHeadingCapitalization from "remark-lint-heading-capitalization";
@@ -88,9 +85,7 @@ import remarkLintNoEmptyUrl from "remark-lint-no-empty-url";
 import remarkLintNoFileNameArticles from "remark-lint-no-file-name-articles";
 import remarkLintNoFileNameConsecutiveDashes from "remark-lint-no-file-name-consecutive-dashes";
 import remarkLintNoFileNameIrregularCharacters from "remark-lint-no-file-name-irregular-characters";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `remarkLintNofileNameMixedCase` in upstream types.
 import remarkLintNoFileNameMixedCase from "remark-lint-no-file-name-mixed-case";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `remarkLintNofileNameOuterDashes` in upstream types.
 import remarkLintNoFileNameOuterDashes from "remark-lint-no-file-name-outer-dashes";
 import remarkLintNoHeadingContentIndent from "remark-lint-no-heading-content-indent";
 import remarkLintNoHeadingIndent from "remark-lint-no-heading-indent";
@@ -123,18 +118,15 @@ import remarkLintTablePipeAlignment from "remark-lint-table-pipe-alignment";
 import remarkLintTablePipes from "remark-lint-table-pipes";
 import remarkLintUnorderedListMarkerStyle from "remark-lint-unordered-list-marker-style";
 import remarkLintWriteGood from "remark-lint-write-good";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkMath from "remark-math";
 import remarkPresetLintConsistent from "remark-preset-lint-consistent";
 import remarkPresetLintMarkdownStyleGuide from "remark-preset-lint-markdown-style-guide";
 import remarkPresetLintRecommended from "remark-preset-lint-recommended";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `_default` in upstream types.
 import remarkPresetPrettier from "remark-preset-prettier";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkToc from "remark-toc";
-// eslint-disable-next-line import-x/no-rename-default -- Default export is named `default` in upstream types.
 import remarkValidateLinks from "remark-validate-links";
 import wikiLinkPlugin from "remark-wiki-link";
+/* eslint-enable import-x/max-dependencies -- End shared Remark plugin import block. */
 
 const remarkWikiLink = wikiLinkPlugin;
 // These upstream plugins/presets are valid Unified pluggables at runtime, but
@@ -362,7 +354,7 @@ const sharedPlugins: PluggableList = [
         ],
     ],
     [remarkLintNoRepeatPunctuation, ",，。·"],
-    // Set a very high maximum line length to avoid conflicts with prettier and eslint comment length plugins /
+    // Set a very high maximum line length to avoid conflicts with Prettier and ESLint comment length plugins /
     // settings.
     [remarkLintMaximumLineLength, 5000],
     // Set a very high maximum heading length to avoid conflicts with `remark-lint-heading-word-length`,

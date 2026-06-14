@@ -1,3 +1,5 @@
-declare const remarkLintMatchPunctuation: import("unified").Plugin;
+import type { Plugin } from "unified";
+
+declare const remarkLintMatchPunctuation: Plugin;
 
 export default remarkLintMatchPunctuation;

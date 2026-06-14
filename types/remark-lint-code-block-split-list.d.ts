@@ -1,3 +1,5 @@
-declare const remarkLintCodeBlockSplitList: import("unified").Plugin;
+import type { Plugin } from "unified";
+
+declare const remarkLintCodeBlockSplitList: Plugin;
 
 export default remarkLintCodeBlockSplitList;

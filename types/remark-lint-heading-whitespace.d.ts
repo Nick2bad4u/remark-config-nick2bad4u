@@ -1,3 +1,5 @@
-declare const remarkLintHeadingWhitespace: import("unified").Plugin;
+import type { Plugin } from "unified";
+
+declare const remarkLintHeadingWhitespace: Plugin;
 
 export default remarkLintHeadingWhitespace;

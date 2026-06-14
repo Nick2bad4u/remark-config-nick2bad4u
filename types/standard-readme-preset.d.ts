@@ -1,3 +1,5 @@
-declare const standardReadmePreset: import("unified").Preset;
+import type { Preset } from "unified";
+
+declare const standardReadmePreset: Preset;
 
 export default standardReadmePreset;

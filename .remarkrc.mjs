@@ -8,4 +8,4 @@
 
 import remarkConfig from "./dist/preset.js";
 
-export default remarkConfig;
+export default Object.freeze({ ...remarkConfig });
