@@ -8,7 +8,7 @@ labels:
 assignees: []
 ---
 
-## Problem statement
+# Problem statement
 
 <!-- What developer pain does this solve? -->
 
@@ -23,6 +23,8 @@ assignees: []
 - Requires network access?: Yes / No / Unsure
 
 ## Alternatives considered
+
+<!-- List other approaches you considered, or write N/A. -->
 
 ## Examples
 

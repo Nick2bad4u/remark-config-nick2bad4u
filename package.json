@@ -48,6 +48,11 @@
             "types": "./dist/preset.d.ts",
             "import": "./dist/preset.js",
             "require": null
+        },
+        "./standard-readme": {
+            "types": "./dist/standard-readme.d.ts",
+            "import": "./dist/standard-readme.js",
+            "require": null
         }
     },
     "main": "./dist/preset.js",
@@ -94,9 +99,9 @@
         "typecheck": "npm run build:preset && tsc -p tsconfig.json --noEmit && tsc -p tsconfig.eslint.json --noEmit && tsc -p tsconfig.js.json --noEmit && tsc -p tsconfig.vitest-typecheck.json --noEmit",
         "typecheck:all": "npm run typecheck",
         "types:update": "typesync",
+        "update-actions": "npx actions-up --yes --style sha",
         "update-deps": "npx ncu -i --install never && npm update --force && npm install --force && npm run sync:node-version-files",
-        "verify": "npm run release:verify",
-        "update-actions": "npx actions-up --yes --style sha"
+        "verify": "npm run release:verify"
     },
     "dependencies": {
         "remark-directive": "^4.0.0",
@@ -205,6 +210,7 @@
         "remark-toc": "^9.0.0",
         "remark-validate-links": "^13.1.0",
         "remark-wiki-link": "^2.0.1",
+        "standard-readme-preset": "^1.0.10",
         "unified": "^11.0.5"
     },
     "devDependencies": {

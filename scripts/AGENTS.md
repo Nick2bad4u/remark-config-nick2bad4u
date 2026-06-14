@@ -44,7 +44,7 @@ Keep them deterministic, reviewable, and safe to run repeatedly.
 
 - Avoid Bash-only syntax in Node-driven scripts.
 - Avoid absolute machine-specific paths.
-- If a script depends on platform behavior, document that clearly in comments or the README.
+- If a script depends on platform behavior, document that behavior in comments or the README.
 - Prefer repository scripts in `package.json` as the public entrypoint instead of telling users to invoke implementation files directly.
 
 ## Source of truth

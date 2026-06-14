@@ -8,7 +8,7 @@ labels:
 assignees: []
 ---
 
-## Summary
+# Summary
 
 <!-- Briefly describe the bug and impact. -->
 
@@ -44,7 +44,11 @@ assignees: []
 
 ## Expected behavior
 
+<!-- What should have happened? -->
+
 ## Actual behavior
+
+<!-- What happened instead? -->
 
 ## Environment
 

@@ -2,6 +2,7 @@ import type { Preset } from "unified";
 
 import { remark } from "remark";
 import * as packageExports from "remark-config-nick2bad4u";
+import standardReadme from "remark-config-nick2bad4u/standard-readme";
 import { describe, expect, it } from "vitest";
 
 import * as sourceExports from "../src/preset";
@@ -68,6 +69,30 @@ describe("remark-config-nick2bad4u preset", () => {
             .process({
                 path: "readme.md",
                 value: "# Project\n\nParagraph text.\n",
+            });
+
+        expect(file.messages).toStrictEqual([]);
+    });
+
+    it("exposes Standard Readme as a separate README-only preset", async () => {
+        expect.assertions(1);
+
+        const file = await remark()
+            .use(standardReadme)
+            .process({
+                path: "README.md",
+                value: [
+                    "# remark-config-nick2bad4u",
+                    "",
+                    "## Contributing",
+                    "",
+                    "Open an issue.",
+                    "",
+                    "## License",
+                    "",
+                    "MIT",
+                    "",
+                ].join("\n"),
             });
 
         expect(file.messages).toStrictEqual([]);

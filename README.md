@@ -1,7 +1,6 @@
 # remark-config-nick2bad4u
 
-[![CI](https://github.com/Nick2bad4u/remark-config-nick2bad4u/actions/workflows/ci.yml/badge.svg)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/remark-config-nick2bad4u.svg)](https://www.npmjs.com/package/remark-config-nick2bad4u)
+[![NPM license.](https://flat.badgen.net/npm/license/remark-config-nick2bad4u?color=purple)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/blob/main/LICENSE) [![NPM total downloads.](https://flat.badgen.net/npm/dt/remark-config-nick2bad4u?color=pink)](https://www.npmjs.com/package/remark-config-nick2bad4u) [![Latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/remark-config-nick2bad4u?color=cyan)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/remark-config-nick2bad4u?color=yellow)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/remark-config-nick2bad4u?color=green)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/remark-config-nick2bad4u?color=red)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/issues) [![Codecov.](https://flat.badgen.net/codecov/github/Nick2bad4u/remark-config-nick2bad4u?color=blue)](https://codecov.io/gh/Nick2bad4u/remark-config-nick2bad4u)
 
 Shared Remark configuration for Nick2bad4u projects.
 
@@ -37,6 +36,17 @@ Then add scripts similar to these:
 
 Use `.remarkignore` for generated output, dependency folders, coverage reports,
 and any project-specific Markdown that should not be rewritten automatically.
+
+For README-only Standard Readme checks, use this package's CLI-loadable
+Standard Readme subpath:
+
+```sh
+remark -u remark-config-nick2bad4u/standard-readme README.md
+```
+
+That subpath is separate from the default shared preset so Standard Readme's
+README-specific filename and section rules do not run against every Markdown
+file in a repository.
 
 ## Derived project config
 
@@ -88,6 +98,8 @@ The shared preset includes support for:
 - Additional lint rules for headings, lists, tables, code fences, references,
   file names, task lists, MDX JSX nodes, and prose quality.
 - Prettier-compatible normalization via `remark-preset-prettier`.
+- A separate README-only Standard Readme preset export at
+  `remark-config-nick2bad4u/standard-readme`.
 
 Network URL checks from `remark-lint-no-dead-urls` are installed but disabled in
 the default preset because they can make local and CI runs slow or flaky. Enable

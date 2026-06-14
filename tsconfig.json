@@ -87,6 +87,9 @@
             ],
             "remark-lint-write-good": [
                 "./types/remark-lint-write-good.d.ts"
+            ],
+            "standard-readme-preset": [
+                "./types/standard-readme-preset.d.ts"
             ]
         },
         "preserveConstEnums": true,
