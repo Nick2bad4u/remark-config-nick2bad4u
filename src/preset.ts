@@ -126,6 +126,8 @@ import remarkPresetPrettier from "remark-preset-prettier";
 import remarkToc from "remark-toc";
 import remarkValidateLinks from "remark-validate-links";
 import wikiLinkPlugin from "remark-wiki-link";
+
+import { tocOptions } from "./toc-options.js";
 /* eslint-enable import-x/max-dependencies -- End shared Remark plugin import block. */
 
 const remarkWikiLink = wikiLinkPlugin;
@@ -373,15 +375,7 @@ const sharedPlugins: PluggableList = [
     remarkLintNoDuplicateDefinedUrls,
     remarkLintNoEmptyUrl,
     remarkLintCheckTOC,
-    [
-        remarkToc,
-        {
-            heading: "table of contents|toc",
-            maxDepth: 2,
-            ordered: true,
-            tight: true,
-        },
-    ],
+    [remarkToc, tocOptions],
     [remarkLintNoDeadUrls, false],
     remarkLintMdxJsxAttributeSort,
     [remarkLintMdxJsxQuoteStyle, '"'],

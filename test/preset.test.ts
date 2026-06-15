@@ -75,6 +75,39 @@ describe("remark-config-nick2bad4u preset", () => {
         expect(file.messages).toStrictEqual([]);
     });
 
+    it("uses the shared table of contents settings in the default preset", async () => {
+        expect.assertions(1);
+
+        const file = await remark()
+            .use(packageExports.preset as Preset)
+            .process({
+                path: "README.md",
+                value: [
+                    "# Project",
+                    "",
+                    "## Contents",
+                    "",
+                    "## Install",
+                    "",
+                    "Install instructions.",
+                    "",
+                    "## Usage",
+                    "",
+                    "Usage instructions.",
+                    "",
+                ].join("\n"),
+            });
+
+        expect(String(file)).toContain(
+            [
+                "## Contents",
+                "",
+                "- [Install](#install)",
+                "- [Usage](#usage)",
+            ].join("\n")
+        );
+    });
+
     it("exposes Standard Readme as a separate README-only preset", async () => {
         expect.assertions(1);
 
@@ -126,8 +159,8 @@ describe("remark-config-nick2bad4u preset", () => {
             [
                 "## Contents",
                 "",
-                "1. [Install](#install)",
-                "2. [Usage](#usage)",
+                "* [Install](#install)",
+                "* [Usage](#usage)",
             ].join("\n")
         );
     });
