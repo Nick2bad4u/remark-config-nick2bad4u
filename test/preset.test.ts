@@ -3,6 +3,7 @@ import type { Preset } from "unified";
 import { remark } from "remark";
 import * as packageExports from "remark-config-nick2bad4u";
 import standardReadme from "remark-config-nick2bad4u/standard-readme";
+import toc from "remark-config-nick2bad4u/toc";
 import { describe, expect, it } from "vitest";
 
 import * as sourceExports from "../src/preset";
@@ -96,5 +97,64 @@ describe("remark-config-nick2bad4u preset", () => {
             });
 
         expect(file.messages).toStrictEqual([]);
+    });
+
+    it("exposes table of contents generation as a separate CLI preset", async () => {
+        expect.assertions(1);
+
+        const file = await remark()
+            .use(toc)
+            .process({
+                path: "README.md",
+                value: [
+                    "# Project",
+                    "",
+                    "## Contents",
+                    "",
+                    "## Install",
+                    "",
+                    "Install instructions.",
+                    "",
+                    "## Usage",
+                    "",
+                    "Usage instructions.",
+                    "",
+                ].join("\n"),
+            });
+
+        expect(String(file)).toContain(
+            [
+                "## Contents",
+                "",
+                "1. [Install](#install)",
+                "2. [Usage](#usage)",
+            ].join("\n")
+        );
+    });
+
+    it("reports stale table of contents entries before generation", async () => {
+        expect.assertions(1);
+
+        const file = await remark()
+            .use(toc)
+            .process({
+                path: "README.md",
+                value: [
+                    "# Project",
+                    "",
+                    "## Table of Contents",
+                    "",
+                    "1. [Wrong](#wrong)",
+                    "",
+                    "## Install",
+                    "",
+                    "Install instructions.",
+                    "",
+                ].join("\n"),
+            });
+
+        expect(file.messages.map((message) => message.ruleId)).toContain(
+            "check-toc"
+        );
     });
 });

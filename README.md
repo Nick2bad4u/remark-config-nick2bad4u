@@ -28,8 +28,8 @@ Then add scripts similar to these:
 ```json
 {
  "scripts": {
-  "lint:remark": "remark . --frail --ignore-path .remarkignore",
-  "lint:remark:fix": "remark . --ignore-path .remarkignore --output"
+  "lint:remark": "npx remark . --frail --ignore-path .remarkignore",
+  "lint:remark:fix": "npx remark . --ignore-path .remarkignore --output"
  }
 }
 ```
@@ -41,12 +41,45 @@ For README-only Standard Readme checks, use this package's CLI-loadable
 Standard Readme subpath:
 
 ```sh
-remark -u remark-config-nick2bad4u/standard-readme README.md
+npx remark -u remark-config-nick2bad4u/standard-readme README.md --frail --no-stdout
+```
+
+Copy-paste npm script:
+
+```json
+{
+ "scripts": {
+  "lint:readme": "npx remark -u remark-config-nick2bad4u/standard-readme README.md --frail --no-stdout"
+ }
+}
 ```
 
 That subpath is separate from the default shared preset so Standard Readme's
 README-specific filename and section rules do not run against every Markdown
 file in a repository.
+
+For table of contents checks and generation, use the separate TOC subpath:
+
+```sh
+npx remark -u remark-config-nick2bad4u/toc README.md --frail --no-stdout
+npx remark -u remark-config-nick2bad4u/toc README.md --output
+```
+
+Copy-paste npm scripts:
+
+```json
+{
+ "scripts": {
+  "lint:toc": "npx remark -u remark-config-nick2bad4u/toc README.md --frail --no-stdout",
+  "lint:toc:fix": "npx remark -u remark-config-nick2bad4u/toc README.md --output"
+ }
+}
+```
+
+The TOC subpath checks existing TOCs before running the generator. It updates
+the list below a `Contents`, `Table of Contents`, `Table-of-Contents`, or `TOC`
+heading, so the file still needs that heading where the generated list should
+appear.
 
 ## Derived project config
 
@@ -100,6 +133,8 @@ The shared preset includes support for:
 - Prettier-compatible normalization via `remark-preset-prettier`.
 - A separate README-only Standard Readme preset export at
   `remark-config-nick2bad4u/standard-readme`.
+- A separate table of contents preset export at
+  `remark-config-nick2bad4u/toc`.
 
 Network URL checks from `remark-lint-no-dead-urls` are installed but disabled in
 the default preset because they can make local and CI runs slow or flaky. Enable
