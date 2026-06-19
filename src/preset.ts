@@ -49,7 +49,7 @@ import remarkLintFileExtension from "remark-lint-file-extension";
 import remarkLintFinalDefinition from "remark-lint-final-definition";
 import remarkLintFinalNewline from "remark-lint-final-newline";
 import remarkLintFirstHeadingLevel from "remark-lint-first-heading-level";
-import remarkLintFrontmatterSchema from "remark-lint-frontmatter-schema";
+import remarkLintFrontmatterValidation from "remark-lint-frontmatter-validation";
 import remarkLintHardBreakSpaces from "remark-lint-hard-break-spaces";
 import remarkLintHeadingCapitalization from "remark-lint-heading-capitalization";
 import remarkLintHeadingIncrement from "remark-lint-heading-increment";
@@ -137,9 +137,9 @@ const remarkWikiLink = wikiLinkPlugin;
 const remarkIgnoreEndPlugin = remarkIgnoreEnd as unknown as Pluggable;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- `remark-ignore` exports a zero-parameter plugin that Unified can still consume.
 const remarkIgnoreStartPlugin = remarkIgnoreStart as unknown as Pluggable;
-const remarkLintFrontmatterSchemaPlugin =
+const remarkLintFrontmatterValidationPlugin =
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- The plugin works with `false` to disable schema checks in this preset.
-    remarkLintFrontmatterSchema as unknown as Plugin;
+    remarkLintFrontmatterValidation as unknown as Plugin;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- The package exports a preset object whose declarations include disabled entries.
 const remarkPresetPrettierPlugin = remarkPresetPrettier as Preset;
 
@@ -384,7 +384,7 @@ const sharedPlugins: PluggableList = [
     [remarkLintMdxJsxShorthandAttribute, true],
     remarkLintMdxJsxUniqueAttributeName,
     [remarkLintNoUndefinedReferences, false],
-    [remarkLintFrontmatterSchemaPlugin, false],
+    [remarkLintFrontmatterValidationPlugin, false],
     remarkIgnoreEndPlugin,
 ];
 
