@@ -137,11 +137,21 @@ const remarkWikiLink = wikiLinkPlugin;
 const remarkIgnoreEndPlugin = remarkIgnoreEnd as unknown as Pluggable;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- `remark-ignore` exports a zero-parameter plugin that Unified can still consume.
 const remarkIgnoreStartPlugin = remarkIgnoreStart as unknown as Pluggable;
-const remarkLintFrontmatterValidationPlugin =
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- The plugin works with `false` to disable schema checks in this preset.
-    remarkLintFrontmatterValidation as unknown as Plugin;
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- The package exports a preset object whose declarations include disabled entries.
-const remarkPresetPrettierPlugin = remarkPresetPrettier as Preset;
+
+type DisabledPrettierPluginEntry = readonly [plugin: Plugin, options: false];
+type MaybeDisabledPrettierPluginEntry = DisabledPrettierPluginEntry | undefined;
+
+function isDisabledPrettierPluginEntry(
+    entry: MaybeDisabledPrettierPluginEntry
+): entry is DisabledPrettierPluginEntry {
+    return Boolean(entry);
+}
+
+const remarkPresetPrettierPlugin: Preset = {
+    plugins: remarkPresetPrettier.plugins
+        .filter(isDisabledPrettierPluginEntry)
+        .map(([plugin, options]) => [plugin, options]),
+};
 
 /** Remark preset exported by this package. */
 export interface RemarkConfig extends Preset {
@@ -384,7 +394,7 @@ const sharedPlugins: PluggableList = [
     [remarkLintMdxJsxShorthandAttribute, true],
     remarkLintMdxJsxUniqueAttributeName,
     [remarkLintNoUndefinedReferences, false],
-    [remarkLintFrontmatterValidationPlugin, false],
+    [remarkLintFrontmatterValidation, true],
     remarkIgnoreEndPlugin,
 ];
 

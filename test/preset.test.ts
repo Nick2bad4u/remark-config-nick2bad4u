@@ -4,6 +4,7 @@ import { remark } from "remark";
 import * as packageExports from "remark-config-nick2bad4u";
 import standardReadme from "remark-config-nick2bad4u/standard-readme";
 import toc from "remark-config-nick2bad4u/toc";
+import remarkLintFrontmatterValidation from "remark-lint-frontmatter-validation";
 import { describe, expect, it } from "vitest";
 
 import * as sourceExports from "../src/preset";
@@ -34,6 +35,30 @@ describe("remark-config-nick2bad4u preset", () => {
         );
 
         expect(stringPluginEntries).toStrictEqual([]);
+    });
+
+    it("enables frontmatter validation in the shared preset", () => {
+        expect.assertions(2);
+
+        const packageEntry = packageExports.preset.plugins?.find(
+            (entry) =>
+                Array.isArray(entry) &&
+                entry[0] === remarkLintFrontmatterValidation
+        );
+        const sourceEntry = sourceExports.preset.plugins.find(
+            (entry) =>
+                Array.isArray(entry) &&
+                entry[0] === remarkLintFrontmatterValidation
+        );
+
+        expect(packageEntry).toStrictEqual([
+            remarkLintFrontmatterValidation,
+            true,
+        ]);
+        expect(sourceEntry).toStrictEqual([
+            remarkLintFrontmatterValidation,
+            true,
+        ]);
     });
 
     it("supports derived project-specific settings and extra plugins", () => {
