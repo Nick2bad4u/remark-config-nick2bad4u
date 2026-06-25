@@ -12,6 +12,7 @@ import standardReadme from "remark-config-nick2bad4u/standard-readme";
 import toc from "remark-config-nick2bad4u/toc";
 import remarkLintDocHeadings, {
     type DocHeadingsOptions,
+    eslintOptions,
 } from "remark-lint-doc-headings";
 import remarkLintFrontmatterValidation from "remark-lint-frontmatter-validation";
 import { describe, expect, it } from "vitest";
@@ -26,8 +27,15 @@ type DocHeadingsEntry = readonly [
 const isDocHeadingsEntry = (entry: unknown): entry is DocHeadingsEntry =>
     Array.isArray(entry) && entry[0] === remarkLintDocHeadings;
 
-const findDocHeadingsEntry = (plugins: readonly unknown[]) =>
-    plugins.find(isDocHeadingsEntry);
+const findDocHeadingsEntries = (plugins: readonly unknown[]) =>
+    plugins.filter(isDocHeadingsEntry);
+
+const findEslintDocHeadingsEntry = (plugins: readonly unknown[]) =>
+    findDocHeadingsEntries(plugins).find(
+        (entry) =>
+            entry[1].requireDeprecatedReplacementLink ===
+            eslintOptions.requireDeprecatedReplacementLink
+    );
 
 describe("remark-config-nick2bad4u preset", () => {
     it("exports the shared preset as the default and named recommended preset", () => {
@@ -81,6 +89,32 @@ describe("remark-config-nick2bad4u preset", () => {
         ]);
     });
 
+    it("enables generic and ESLint doc heading checks in the shared preset", () => {
+        expect.assertions(8);
+
+        const packageEntries = findDocHeadingsEntries(
+            packageExports.preset.plugins ?? []
+        );
+        const sourceEntries = findDocHeadingsEntries(
+            sourceExports.preset.plugins
+        );
+
+        expect(packageEntries).toHaveLength(2);
+        expect(sourceEntries).toHaveLength(2);
+        expect(packageEntries[0]?.[0]).toBe(remarkLintDocHeadings);
+        expect(packageEntries[0]?.[1]).toStrictEqual({});
+        expect(packageEntries[1]?.[0]).toBe(remarkLintDocHeadings);
+        expect(packageEntries[1]?.[1]).toMatchObject({
+            exclude: eslintOptions.exclude,
+            h1: eslintOptions.h1,
+            include: eslintOptions.include,
+        });
+        expect(sourceEntries[0]?.[1]).toStrictEqual({});
+        expect(sourceEntries[1]?.[1]).toMatchObject({
+            include: eslintOptions.include,
+        });
+    });
+
     it("supports derived project-specific settings and extra plugins", () => {
         expect.assertions(7);
 
@@ -105,6 +139,58 @@ describe("remark-config-nick2bad4u preset", () => {
 
         expect(sourceDerivedConfig).not.toBe(sourceExports.preset);
         expect(sourceDerivedConfig.plugins.at(-2)).toBe(customPlugin);
+    });
+
+    it("supports disabling or customizing built-in doc heading checks", () => {
+        expect.assertions(8);
+
+        const disabledConfig = packageExports.createConfig({
+            docHeadings: false,
+        });
+        const eslintOnlyConfig = packageExports.createConfig({
+            docHeadings: {
+                generic: false,
+            },
+        });
+        const genericOnlyConfig = packageExports.createConfig({
+            docHeadings: {
+                eslint: false,
+                generic: {
+                    h1: false,
+                },
+            },
+        });
+        const customEslintConfig = packageExports.createConfig({
+            docHeadings: {
+                eslint: {
+                    headings: {
+                        packageDocumentation: false,
+                    },
+                },
+            },
+        });
+        const eslintOnlyEntries = findDocHeadingsEntries(
+            eslintOnlyConfig.plugins
+        );
+        const genericOnlyEntries = findDocHeadingsEntries(
+            genericOnlyConfig.plugins
+        );
+        const customEslintEntry = findEslintDocHeadingsEntry(
+            customEslintConfig.plugins
+        );
+
+        expect(findDocHeadingsEntries(disabledConfig.plugins)).toHaveLength(0);
+        expect(eslintOnlyEntries).toHaveLength(1);
+        expect(eslintOnlyEntries[0]?.[1].include).toBe(eslintOptions.include);
+        expect(genericOnlyEntries).toHaveLength(1);
+        expect(genericOnlyEntries[0]?.[1]).toStrictEqual({
+            h1: false,
+        });
+        expect(customEslintEntry?.[1].headings?.correct).toBe(true);
+        expect(customEslintEntry?.[1].headings?.packageDocumentation).toBe(
+            false
+        );
+        expect(customEslintEntry?.[1].include).toBe(eslintOptions.include);
     });
 
     it("can be loaded by Remark without missing plugin dependencies", async () => {
@@ -177,11 +263,13 @@ describe("remark-config-nick2bad4u preset", () => {
         expect(file.messages).toStrictEqual([]);
     });
 
-    it("exposes ESLint rule documentation heading presets as separate opt-in presets", () => {
+    it("exposes ESLint rule documentation heading presets as separate subpath presets", () => {
         expect.assertions(4);
 
-        const eslintEntry = findDocHeadingsEntry(eslintRuleDocs.plugins);
-        const strictEntry = findDocHeadingsEntry(eslintRuleDocsStrict.plugins);
+        const eslintEntry = findEslintDocHeadingsEntry(eslintRuleDocs.plugins);
+        const strictEntry = findEslintDocHeadingsEntry(
+            eslintRuleDocsStrict.plugins
+        );
 
         expect(eslintEntry?.[0]).toBe(remarkLintDocHeadings);
         expect(eslintRuleDocs.plugins.at(-2)).toBe(eslintEntry);
@@ -217,8 +305,8 @@ describe("remark-config-nick2bad4u preset", () => {
                 },
             },
         });
-        const entry = findDocHeadingsEntry(config.plugins);
-        const strictEntry = findDocHeadingsEntry(strictConfig.plugins);
+        const entry = findEslintDocHeadingsEntry(config.plugins);
+        const strictEntry = findEslintDocHeadingsEntry(strictConfig.plugins);
 
         expect(entry?.[0]).toBe(remarkLintDocHeadings);
         expect(entry?.[1].allowUnknownHeadings).toBe(true);

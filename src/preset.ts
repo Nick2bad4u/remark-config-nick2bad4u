@@ -41,6 +41,10 @@ import remarkLintDirectiveCollapsedAttribute from "remark-lint-directive-collaps
 import remarkLintDirectiveQuoteStyle from "remark-lint-directive-quote-style";
 import remarkLintDirectiveShortcutAttribute from "remark-lint-directive-shortcut-attribute";
 import remarkLintDirectiveUniqueAttributeName from "remark-lint-directive-unique-attribute-name";
+import remarkLintDocHeadings, {
+    type DocHeadingsOptions,
+    eslintOptions,
+} from "remark-lint-doc-headings";
 import remarkLintEmphasisMarker from "remark-lint-emphasis-marker";
 import remarkLintFencedCodeFlag from "remark-lint-fenced-code-flag";
 import remarkLintFencedCodeFlagCase from "remark-lint-fenced-code-flag-case";
@@ -127,6 +131,7 @@ import remarkToc from "remark-toc";
 import remarkValidateLinks from "remark-validate-links";
 import wikiLinkPlugin from "remark-wiki-link";
 
+import { mergeDocHeadingsOptions } from "./doc-heading-options.js";
 import { tocOptions } from "./toc-options.js";
 /* eslint-enable import-x/max-dependencies -- End shared Remark plugin import block. */
 
@@ -163,10 +168,29 @@ export interface RemarkConfig extends Preset {
 
 /** Options for creating a derived Remark preset. */
 export interface RemarkConfigOptions {
+    /**
+     * Built-in doc heading checks. Set to `false` to disable both generic
+     * Markdown heading checks and ESLint rule-doc heading checks.
+     */
+    readonly docHeadings?: false | Readonly<RemarkDocHeadingsOptions>;
     /** Additional plugins appended before `remark-preset-prettier`. */
     readonly plugins?: PluggableList;
     /** Settings merged over the shared defaults. */
     readonly settings?: Readonly<Partial<RemarkSettings>>;
+}
+
+/** Options for the built-in doc-heading lint entries. */
+export interface RemarkDocHeadingsOptions {
+    /**
+     * ESLint rule documentation heading checks for rule docs under
+     * `docs/rules`. Set to `false` to disable the ESLint-specific check.
+     */
+    readonly eslint?: false | Readonly<DocHeadingsOptions>;
+    /**
+     * Generic Markdown heading checks applied to Markdown-family files. Set to
+     * `false` to disable the generic check.
+     */
+    readonly generic?: false | Readonly<DocHeadingsOptions>;
 }
 
 /** Remark plugin, plugin tuple, or preset entry accepted by Unified. */
@@ -398,6 +422,29 @@ const sharedPlugins: PluggableList = [
     remarkIgnoreEndPlugin,
 ];
 
+const createDocHeadingPlugins = (
+    options: false | Readonly<RemarkDocHeadingsOptions> | undefined
+): PluggableList => {
+    if (options === false) {
+        return [];
+    }
+
+    const plugins: PluggableList = [];
+
+    if (options?.generic !== false) {
+        plugins.push([remarkLintDocHeadings, options?.generic ?? {}]);
+    }
+
+    if (options?.eslint !== false) {
+        plugins.push([
+            remarkLintDocHeadings,
+            mergeDocHeadingsOptions(eslintOptions, options?.eslint),
+        ]);
+    }
+
+    return plugins;
+};
+
 /**
  * Create a Remark preset using the shared Nick2bad4u defaults.
  *
@@ -411,6 +458,7 @@ export const createConfig = (
 ): RemarkConfig => ({
     plugins: [
         ...sharedPlugins,
+        ...createDocHeadingPlugins(options.docHeadings),
         ...(options.plugins ?? []),
         remarkPresetPrettierPlugin,
     ],

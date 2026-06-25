@@ -1,6 +1,6 @@
 # remark-config-nick2bad4u
 
-[![NPM license.](https://flat.badgen.net/npm/license/remark-config-nick2bad4u?color=purple)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/blob/main/LICENSE) [![NPM total downloads.](https://flat.badgen.net/npm/dt/remark-config-nick2bad4u?color=pink)](https://www.npmjs.com/package/remark-config-nick2bad4u) [![Latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/remark-config-nick2bad4u?color=cyan)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/remark-config-nick2bad4u?color=yellow)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/remark-config-nick2bad4u?color=green)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/remark-config-nick2bad4u?color=red)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/issues) [![Codecov.](https://flat.badgen.net/codecov/github/Nick2bad4u/remark-config-nick2bad4u?color=blue)](https://codecov.io/gh/Nick2bad4u/remark-config-nick2bad4u)
+[![NPM license.](https://flat.badgen.net/npm/license/remark-config-nick2bad4u?color=purple)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/blob/main/LICENSE) [![NPM total downloads.](https://flat.badgen.net/npm/dt/remark-config-nick2bad4u?color=pink)](https://www.npmjs.com/package/remark-config-nick2bad4u) [![Latest GitHub release.](https://flat.badgen.net/github/release/Nick2bad4u/remark-config-nick2bad4u?color=cyan)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/releases) [![GitHub stars.](https://flat.badgen.net/github/stars/Nick2bad4u/remark-config-nick2bad4u?color=yellow)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/stargazers) [![GitHub forks.](https://flat.badgen.net/github/forks/Nick2bad4u/remark-config-nick2bad4u?color=orange)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/forks) [![GitHub open issues.](https://flat.badgen.net/github/open-issues/Nick2bad4u/remark-config-nick2bad4u?color=red)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/issues) [![Codecov.](https://flat.badgen.net/codecov/github/Nick2bad4u/remark-config-nick2bad4u?color=blue)](https://codecov.io/gh/Nick2bad4u/remark-config-nick2bad4u) [![Repo Checks.](https://flat.badgen.net/github/checks/nick2bad4u/remark-config-nick2bad4u?color=green)](https://github.com/Nick2bad4u/remark-config-nick2bad4u/actions)
 
 Shared Remark configuration for Nick2bad4u projects.
 
@@ -36,6 +36,9 @@ Then add scripts similar to these:
 
 Use `.remarkignore` for generated output, dependency folders, coverage reports,
 and any project-specific Markdown that should not be rewritten automatically.
+The default preset also checks Markdown-family files for generic document
+heading hygiene and applies the ESLint rule-documentation heading contract only
+to matching rule docs under `docs/rules`.
 
 For README-only Standard Readme checks, use this package's CLI-loadable
 Standard Readme subpath:
@@ -81,8 +84,9 @@ the list below a `Contents`, `Table of Contents`, `Table-of-Contents`, or `TOC`
 heading, so the file still needs that heading where the generated list should
 appear.
 
-For ESLint rule documentation repositories, use the separate ESLint docs
-subpath:
+The default preset already enables the standard ESLint rule documentation
+heading checks for `docs/rules/**/*.md`. Use the separate ESLint docs subpath
+when a repository wants to make that convention explicit:
 
 ```js
 import eslintRuleDocs from "remark-config-nick2bad4u/eslint";
@@ -90,10 +94,10 @@ import eslintRuleDocs from "remark-config-nick2bad4u/eslint";
 export default eslintRuleDocs;
 ```
 
-That preset keeps the shared Remark defaults and adds
+That preset keeps the shared Remark defaults and configures
 `remark-lint-doc-headings` with its built-in ESLint rule-documentation heading
-rules. It targets `docs/rules/**/*.md` and skips the plugin's default non-rule
-doc paths.
+rules. The ESLint-specific check targets `docs/rules/**/*.md` and skips the
+plugin's default non-rule doc paths.
 
 Use the strict variant when rule docs should also require package documentation
 labels and rule catalog markers:
@@ -125,7 +129,7 @@ export default createEslintConfig({
 ```
 
 The `docHeadings` object is merged over the plugin's built-in ESLint rule-doc
-options. Nested `headings` and `h1` values are merged so a repo can disable one
+options. Nested `headings` and `h1` values are merged, so a repo can disable one
 built-in heading or add an allowed H1 title without redefining the whole preset.
 Use `createEslintStrictConfig` from `remark-config-nick2bad4u/eslint-strict`
 for the same customization against the strict defaults.
@@ -143,12 +147,25 @@ export default createConfig({
   gfm: true,
   rule: "*",
  },
+ docHeadings: {
+  // Both checks are enabled by default. Set either key to false to disable it.
+  generic: {},
+  eslint: {
+   headings: {
+    packageDocumentation: false,
+   },
+  },
+ },
  plugins: [
   // Project-specific Remark plugins go here. They are inserted before
   // remark-preset-prettier so formatting normalization still runs last.
  ],
 });
 ```
+
+Set `docHeadings: false` to disable both built-in doc-heading checks. Set
+`docHeadings.generic` or `docHeadings.eslint` to `false` to disable only that
+entry.
 
 Named imports are also available:
 
@@ -179,6 +196,8 @@ The shared preset includes support for:
 - The recommended, consistent, and Markdown style guide Remark lint presets.
 - Additional lint rules for headings, lists, tables, code fences, references,
   file names, task lists, MDX JSX nodes, and prose quality.
+- Generic document heading checks for Markdown-family files and ESLint rule
+  documentation heading checks for `docs/rules/**/*.md`.
 - Prettier-compatible normalization via `remark-preset-prettier`.
 - Separate ESLint rule documentation heading presets at
   `remark-config-nick2bad4u/eslint` and

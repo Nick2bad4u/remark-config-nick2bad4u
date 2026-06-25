@@ -1,11 +1,9 @@
+import type { DocHeadingsOptions } from "remark-lint-doc-headings";
 import type { PluggableList } from "unified";
 
-import remarkLintDocHeadings, {
-    type DocHeadingsOptions,
-    type H1Options,
-} from "remark-lint-doc-headings";
 import { isDefined, objectHasOwn } from "ts-extras";
 
+import { mergeDocHeadingsOptions } from "./doc-heading-options.js";
 import {
     createConfig,
     type RemarkConfig,
@@ -15,61 +13,13 @@ import {
 /** Options for creating a Remark preset with ESLint rule-doc heading checks. */
 export interface RuleDocHeadingsConfigOptions extends Omit<
     RemarkConfigOptions,
-    "plugins"
+    "docHeadings" | "plugins"
 > {
     /** Options merged over the selected `remark-lint-doc-headings` preset. */
     readonly docHeadings?: Readonly<DocHeadingsOptions>;
     /** Additional plugins appended after the rule-doc heading checks. */
     readonly plugins?: PluggableList;
 }
-
-const mergeH1Options = (
-    defaults: false | H1Options | undefined,
-    overrides: false | H1Options | undefined,
-    hasOverrides: boolean
-): false | H1Options | undefined => {
-    if (!hasOverrides) {
-        return defaults;
-    }
-
-    if (overrides === false || defaults === false) {
-        return overrides;
-    }
-
-    return {
-        ...defaults,
-        ...overrides,
-    };
-};
-
-/** Merge user doc-heading options without dropping built-in heading toggles. */
-export const mergeDocHeadingsOptions = (
-    defaults: Readonly<DocHeadingsOptions>,
-    overrides: Readonly<DocHeadingsOptions> = {}
-): DocHeadingsOptions => {
-    const { h1: defaultH1, ...defaultOptions } = defaults;
-    const { h1: overrideH1, ...overrideOptions } = overrides;
-    const h1 = mergeH1Options(
-        defaultH1,
-        overrideH1,
-        objectHasOwn(overrides, "h1")
-    );
-    const mergedOptions = {
-        ...defaultOptions,
-        ...overrideOptions,
-        headings: {
-            ...defaultOptions.headings,
-            ...overrideOptions.headings,
-        },
-    };
-
-    return isDefined(h1)
-        ? {
-              ...mergedOptions,
-              h1,
-          }
-        : mergedOptions;
-};
 
 const hasSettings = (
     options: Readonly<RuleDocHeadingsConfigOptions>
@@ -82,15 +32,13 @@ export const createRuleDocHeadingsConfig = (
     defaults: Readonly<DocHeadingsOptions>,
     options: Readonly<RuleDocHeadingsConfigOptions> = {}
 ): RemarkConfig => {
-    const configOptions: RemarkConfigOptions = {
-        plugins: [
-            [
-                remarkLintDocHeadings,
-                mergeDocHeadingsOptions(defaults, options.docHeadings),
-            ],
-            ...(options.plugins ?? []),
-        ],
+    const docHeadings = {
+        eslint: mergeDocHeadingsOptions(defaults, options.docHeadings),
     };
+    const configOptions: RemarkConfigOptions =
+        isDefined(options.plugins)
+            ? { docHeadings, plugins: options.plugins }
+            : { docHeadings };
 
     return createConfig(
         hasSettings(options)
