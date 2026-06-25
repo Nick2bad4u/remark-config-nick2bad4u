@@ -2,12 +2,32 @@ import type { Preset } from "unified";
 
 import { remark } from "remark";
 import * as packageExports from "remark-config-nick2bad4u";
+import eslintRuleDocs, {
+    createEslintConfig,
+} from "remark-config-nick2bad4u/eslint";
+import eslintRuleDocsStrict, {
+    createEslintStrictConfig,
+} from "remark-config-nick2bad4u/eslint-strict";
 import standardReadme from "remark-config-nick2bad4u/standard-readme";
 import toc from "remark-config-nick2bad4u/toc";
+import remarkLintDocHeadings, {
+    type DocHeadingsOptions,
+} from "remark-lint-doc-headings";
 import remarkLintFrontmatterValidation from "remark-lint-frontmatter-validation";
 import { describe, expect, it } from "vitest";
 
 import * as sourceExports from "../src/preset";
+
+type DocHeadingsEntry = readonly [
+    plugin: typeof remarkLintDocHeadings,
+    options: DocHeadingsOptions,
+];
+
+const isDocHeadingsEntry = (entry: unknown): entry is DocHeadingsEntry =>
+    Array.isArray(entry) && entry[0] === remarkLintDocHeadings;
+
+const findDocHeadingsEntry = (plugins: readonly unknown[]) =>
+    plugins.find(isDocHeadingsEntry);
 
 describe("remark-config-nick2bad4u preset", () => {
     it("exports the shared preset as the default and named recommended preset", () => {
@@ -29,7 +49,7 @@ describe("remark-config-nick2bad4u preset", () => {
         const stringPluginEntries = (
             packageExports.preset.plugins ?? []
         ).filter(
-            (entry) =>
+            (entry: unknown) =>
                 typeof entry === "string" ||
                 (Array.isArray(entry) && typeof entry[0] === "string")
         );
@@ -41,7 +61,7 @@ describe("remark-config-nick2bad4u preset", () => {
         expect.assertions(2);
 
         const packageEntry = packageExports.preset.plugins?.find(
-            (entry) =>
+            (entry: unknown) =>
                 Array.isArray(entry) &&
                 entry[0] === remarkLintFrontmatterValidation
         );
@@ -155,6 +175,83 @@ describe("remark-config-nick2bad4u preset", () => {
             });
 
         expect(file.messages).toStrictEqual([]);
+    });
+
+    it("exposes ESLint rule documentation heading presets as separate opt-in presets", () => {
+        expect.assertions(4);
+
+        const eslintEntry = findDocHeadingsEntry(eslintRuleDocs.plugins);
+        const strictEntry = findDocHeadingsEntry(eslintRuleDocsStrict.plugins);
+
+        expect(eslintEntry?.[0]).toBe(remarkLintDocHeadings);
+        expect(eslintRuleDocs.plugins.at(-2)).toBe(eslintEntry);
+        expect(strictEntry?.[0]).toBe(remarkLintDocHeadings);
+        expect(eslintRuleDocsStrict.plugins.at(-2)).toBe(strictEntry);
+    });
+
+    it("supports configurable ESLint rule documentation heading options", () => {
+        expect.assertions(10);
+
+        const customPlugin = (): undefined => undefined;
+        const config = createEslintConfig({
+            docHeadings: {
+                allowUnknownHeadings: true,
+                h1: {
+                    allowedTitles: ["custom-rule"],
+                },
+                headings: {
+                    adoptionResources: false,
+                    packageDocumentation: false,
+                },
+                include: ["docs/rules/**/*.md", "docs/custom-rules/**/*.md"],
+            },
+            plugins: [customPlugin],
+            settings: {
+                rule: "*",
+            },
+        });
+        const strictConfig = createEslintStrictConfig({
+            docHeadings: {
+                headings: {
+                    packageDocumentation: false,
+                },
+            },
+        });
+        const entry = findDocHeadingsEntry(config.plugins);
+        const strictEntry = findDocHeadingsEntry(strictConfig.plugins);
+
+        expect(entry?.[0]).toBe(remarkLintDocHeadings);
+        expect(entry?.[1].allowUnknownHeadings).toBe(true);
+        expect(entry?.[1].include).toStrictEqual([
+            "docs/rules/**/*.md",
+            "docs/custom-rules/**/*.md",
+        ]);
+        expect(entry?.[1].headings?.correct).toBe(true);
+        expect(entry?.[1].headings?.packageDocumentation).toBe(false);
+        expect(entry?.[1].h1).toMatchObject({
+            allowedTitles: ["custom-rule"],
+            requireExactlyOne: true,
+            requireFileNameMatch: true,
+        });
+        expect(config.plugins.at(-2)).toBe(customPlugin);
+        expect(config.settings.rule).toBe("*");
+        expect(strictEntry?.[0]).toBe(remarkLintDocHeadings);
+        expect(strictEntry?.[1].requirePackageDocumentation).toBe(true);
+    });
+
+    it("can attach the ESLint rule documentation heading presets to Remark", () => {
+        expect.assertions(2);
+
+        expect(() =>
+            remark()
+                .use(eslintRuleDocs as Preset)
+                .freeze()
+        ).not.toThrow();
+        expect(() =>
+            remark()
+                .use(eslintRuleDocsStrict as Preset)
+                .freeze()
+        ).not.toThrow();
     });
 
     it("exposes table of contents generation as a separate CLI preset", async () => {

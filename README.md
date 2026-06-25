@@ -81,6 +81,55 @@ the list below a `Contents`, `Table of Contents`, `Table-of-Contents`, or `TOC`
 heading, so the file still needs that heading where the generated list should
 appear.
 
+For ESLint rule documentation repositories, use the separate ESLint docs
+subpath:
+
+```js
+import eslintRuleDocs from "remark-config-nick2bad4u/eslint";
+
+export default eslintRuleDocs;
+```
+
+That preset keeps the shared Remark defaults and adds
+`remark-lint-doc-headings` with its built-in ESLint rule-documentation heading
+rules. It targets `docs/rules/**/*.md` and skips the plugin's default non-rule
+doc paths.
+
+Use the strict variant when rule docs should also require package documentation
+labels and rule catalog markers:
+
+```js
+import eslintRuleDocsStrict from "remark-config-nick2bad4u/eslint-strict";
+
+export default eslintRuleDocsStrict;
+```
+
+Use the factory when a repo needs to adjust the heading contract, matched paths,
+or shared Remark settings:
+
+```js
+import { createEslintConfig } from "remark-config-nick2bad4u/eslint";
+
+export default createEslintConfig({
+ docHeadings: {
+  include: ["docs/rules/**/*.md", "docs/custom-rules/**/*.md"],
+  headings: {
+   adoptionResources: false,
+   packageDocumentation: false,
+  },
+  h1: {
+   allowedTitles: ["custom-rule-name"],
+  },
+ },
+});
+```
+
+The `docHeadings` object is merged over the plugin's built-in ESLint rule-doc
+options. Nested `headings` and `h1` values are merged so a repo can disable one
+built-in heading or add an allowed H1 title without redefining the whole preset.
+Use `createEslintStrictConfig` from `remark-config-nick2bad4u/eslint-strict`
+for the same customization against the strict defaults.
+
 ## Derived project config
 
 Use `createConfig` when a project needs local settings or extra plugins while
@@ -131,6 +180,9 @@ The shared preset includes support for:
 - Additional lint rules for headings, lists, tables, code fences, references,
   file names, task lists, MDX JSX nodes, and prose quality.
 - Prettier-compatible normalization via `remark-preset-prettier`.
+- Separate ESLint rule documentation heading presets at
+  `remark-config-nick2bad4u/eslint` and
+  `remark-config-nick2bad4u/eslint-strict`.
 - A separate README-only Standard Readme preset export at
   `remark-config-nick2bad4u/standard-readme`.
 - A separate table of contents preset export at

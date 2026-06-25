@@ -38,6 +38,16 @@
             "import": "./dist/preset.js",
             "require": null
         },
+        "./eslint": {
+            "types": "./dist/eslint.d.ts",
+            "import": "./dist/eslint.js",
+            "require": null
+        },
+        "./eslint-strict": {
+            "types": "./dist/eslint-strict.d.ts",
+            "import": "./dist/eslint-strict.js",
+            "require": null
+        },
         "./package.json": "./package.json",
         "./preset": {
             "types": "./dist/preset.d.ts",
@@ -133,6 +143,7 @@
         "remark-lint-directive-quote-style": "^1.0.1",
         "remark-lint-directive-shortcut-attribute": "^1.0.1",
         "remark-lint-directive-unique-attribute-name": "^1.0.1",
+        "remark-lint-doc-headings": "^0.1.0",
         "remark-lint-emphasis-marker": "^4.0.1",
         "remark-lint-fenced-code-flag": "^4.2.0",
         "remark-lint-fenced-code-flag-case": "^3.0.0",
@@ -219,6 +230,7 @@
         "remark-validate-links": "^13.1.0",
         "remark-wiki-link": "^2.0.1",
         "standard-readme-preset": "^1.0.11",
+        "ts-extras": "^1.0.0",
         "unified": "^11.0.5"
     },
     "devDependencies": {
