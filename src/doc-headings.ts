@@ -35,10 +35,9 @@ export const createRuleDocHeadingsConfig = (
     const docHeadings = {
         eslint: mergeDocHeadingsOptions(defaults, options.docHeadings),
     };
-    const configOptions: RemarkConfigOptions =
-        isDefined(options.plugins)
-            ? { docHeadings, plugins: options.plugins }
-            : { docHeadings };
+    const configOptions: RemarkConfigOptions = isDefined(options.plugins)
+        ? { docHeadings, plugins: options.plugins }
+        : { docHeadings };
 
     return createConfig(
         hasSettings(options)

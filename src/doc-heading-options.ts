@@ -2,11 +2,13 @@ import type { DocHeadingsOptions, H1Options } from "remark-lint-doc-headings";
 
 import { isDefined, objectHasOwn } from "ts-extras";
 
+type H1OptionOverride = false | H1Options | undefined;
+
 const mergeH1Options = (
-    defaults: false | H1Options | undefined,
-    overrides: false | H1Options | undefined,
+    defaults: H1OptionOverride,
+    overrides: H1OptionOverride,
     hasOverrides: boolean
-): false | H1Options | undefined => {
+): H1OptionOverride => {
     if (!hasOverrides) {
         return defaults;
     }
