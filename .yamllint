@@ -114,12 +114,8 @@ rules:
         forbid-duplicated-merge-keys: true
     key-ordering: false
 
-    # Line length for readability (relaxed for modern screens)
-    line-length:
-        level: "warning"
-        max: 200
-        allow-non-breakable-words: true
-        allow-non-breakable-inline-mappings: true
+    # Disabled in the shared config release this repository is preparing.
+    line-length: "disable"
 
     # File ending requirements
     new-line-at-end-of-file: "enable"
@@ -132,11 +128,7 @@ rules:
 
     octal-values: "enable"
 
-    quoted-strings:
-        allow-quoted-quotes: false
-        check-keys: false
-        quote-type: "double"
-        required: false
+    quoted-strings: "disable"
 
     # New lines configuration (force consistent Unix newlines across platforms)
     new-lines:

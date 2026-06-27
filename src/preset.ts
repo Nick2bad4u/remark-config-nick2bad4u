@@ -291,6 +291,11 @@ const writeGoodOptions = Object.freeze({
     ]),
 });
 
+const sharedEslintDocHeadingOptions = {
+    ...eslintOptions,
+    include: "docs/rules/*.md",
+} satisfies DocHeadingsOptions;
+
 const sharedPlugins: PluggableList = [
     remarkIgnoreStartPlugin,
     remarkFrontmatter,
@@ -438,7 +443,10 @@ const createDocHeadingPlugins = (
     if (options?.eslint !== false) {
         plugins.push([
             remarkLintDocHeadings,
-            mergeDocHeadingsOptions(eslintOptions, options?.eslint),
+            mergeDocHeadingsOptions(
+                sharedEslintDocHeadingOptions,
+                options?.eslint
+            ),
         ]);
     }
 

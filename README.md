@@ -85,8 +85,8 @@ heading, so the file still needs that heading where the generated list should
 appear.
 
 The default preset already enables the standard ESLint rule documentation
-heading checks for `docs/rules/**/*.md`. Use the separate ESLint docs subpath
-when a repository wants to make that convention explicit:
+heading checks for direct Markdown files under `docs/rules`. Use the separate
+ESLint docs subpath when a repository wants to make that convention explicit:
 
 ```js
 import eslintRuleDocs from "remark-config-nick2bad4u/eslint";
@@ -96,8 +96,9 @@ export default eslintRuleDocs;
 
 That preset keeps the shared Remark defaults and configures
 `remark-lint-doc-headings` with its built-in ESLint rule-documentation heading
-rules. The ESLint-specific check targets `docs/rules/**/*.md` and skips the
-plugin's default non-rule doc paths.
+rules. The shared root preset narrows the ESLint-specific check to
+`docs/rules/*.md`, while the explicit ESLint subpath keeps the plugin's built-in
+path options.
 
 Use the strict variant when rule docs should also require package documentation
 labels and rule catalog markers:
@@ -197,7 +198,7 @@ The shared preset includes support for:
 - Additional lint rules for headings, lists, tables, code fences, references,
   file names, task lists, MDX JSX nodes, and prose quality.
 - Generic document heading checks for Markdown-family files and ESLint rule
-  documentation heading checks for `docs/rules/**/*.md`.
+  documentation heading checks for direct Markdown files under `docs/rules`.
 - Prettier-compatible normalization via `remark-preset-prettier`.
 - Separate ESLint rule documentation heading presets at
   `remark-config-nick2bad4u/eslint` and
