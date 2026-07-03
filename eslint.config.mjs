@@ -4,7 +4,13 @@ import nickTwoBadFourU from "eslint-config-nick2bad4u";
 const config = [
     ...nickTwoBadFourU.configs.all,
 
-    // Add repository-specific config entries below as needed.
+    {
+        files: ["**/*.toml"],
+        rules: {
+            // Tombi 1.1.7 formats the same TOML differently on Windows and Linux.
+            "tombi/tombi": "off",
+        },
+    },
 ];
 
 export default config;
