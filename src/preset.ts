@@ -199,7 +199,10 @@ export type RemarkPluginEntry = Pluggable;
 /** Shared Remark processor settings used by the Nick2bad4u preset. */
 export interface RemarkSettings extends Settings {
     /** Preferred unordered-list marker. */
-    readonly bullet?: "*" | "+" | "-";
+    readonly bullet?:
+        | "*"
+        | "+"
+        | "-";
     /** Whether to close ATX headings. */
     readonly closeAtx?: boolean;
     /** Whether to parse in CommonMark mode. */
@@ -215,7 +218,10 @@ export interface RemarkSettings extends Settings {
     /** Whether ordered markers increment. */
     readonly incrementListMarker?: boolean;
     /** List-item indentation style. */
-    readonly listItemIndent?: "mixed" | "one" | "tab";
+    readonly listItemIndent?:
+        | "mixed"
+        | "one"
+        | "tab";
     /** Preferred quote marker. */
     readonly quote?: "'" | '"';
     /** Whether to prefer reference links. */
@@ -223,7 +229,11 @@ export interface RemarkSettings extends Settings {
     /** Whether to prefer resource links. */
     readonly resourceLink?: boolean;
     /** Marker used for thematic rules. */
-    readonly rule?: "*" | "-" | "_" | null;
+    readonly rule?:
+        | "*"
+        | "-"
+        | "_"
+        | null;
     /** Number of rule marker repetitions. */
     readonly ruleRepetition?: number;
     /** Whether rules include internal spaces. */
@@ -428,7 +438,10 @@ const sharedPlugins: PluggableList = [
 ];
 
 const createDocHeadingPlugins = (
-    options: false | Readonly<RemarkDocHeadingsOptions> | undefined
+    options:
+        | false
+        | Readonly<RemarkDocHeadingsOptions>
+        | undefined
 ): PluggableList => {
     if (options === false) {
         return [];
