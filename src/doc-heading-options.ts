@@ -15,14 +15,14 @@ export const mergeDocHeadingsOptions = (
     const { h1: defaultH1, ...defaultOptions } = defaults;
     const { h1: overrideH1, ...overrideOptions } = overrides;
     const hasH1Override = objectHasOwn(overrides, "h1");
-    const h1: H1OptionOverride = hasH1Override
-        ? overrideH1 === false || defaultH1 === false
+    const overriddenH1: H1OptionOverride =
+        overrideH1 === false || defaultH1 === false
             ? overrideH1
             : {
                   ...defaultH1,
                   ...overrideH1,
-              }
-        : defaultH1;
+              };
+    const h1 = hasH1Override ? overriddenH1 : defaultH1;
     const mergedOptions = {
         ...defaultOptions,
         ...overrideOptions,
