@@ -7,25 +7,6 @@ type H1OptionOverride =
     | H1Options
     | undefined;
 
-const mergeH1Options = (
-    defaults: H1OptionOverride,
-    overrides: H1OptionOverride,
-    hasOverrides: boolean
-): H1OptionOverride => {
-    if (!hasOverrides) {
-        return defaults;
-    }
-
-    if (overrides === false || defaults === false) {
-        return overrides;
-    }
-
-    return {
-        ...defaults,
-        ...overrides,
-    };
-};
-
 /** Merge user doc-heading options without dropping built-in heading toggles. */
 export const mergeDocHeadingsOptions = (
     defaults: Readonly<DocHeadingsOptions>,
@@ -33,11 +14,15 @@ export const mergeDocHeadingsOptions = (
 ): DocHeadingsOptions => {
     const { h1: defaultH1, ...defaultOptions } = defaults;
     const { h1: overrideH1, ...overrideOptions } = overrides;
-    const h1 = mergeH1Options(
-        defaultH1,
-        overrideH1,
-        objectHasOwn(overrides, "h1")
-    );
+    const hasH1Override = objectHasOwn(overrides, "h1");
+    const overriddenH1: H1OptionOverride =
+        overrideH1 === false || defaultH1 === false
+            ? overrideH1
+            : {
+                  ...defaultH1,
+                  ...overrideH1,
+              };
+    const h1 = hasH1Override ? overriddenH1 : defaultH1;
     const mergedOptions = {
         ...defaultOptions,
         ...overrideOptions,
