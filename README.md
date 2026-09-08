@@ -135,6 +135,44 @@ built-in heading or add an allowed H1 title without redefining the whole preset.
 Use `createEslintStrictConfig` from `remark-config-nick2bad4u/eslint-strict`
 for the same customization against the strict defaults.
 
+## File progress
+
+The shared preset enables `remark-lint-file-progress` with the same presentation
+settings as the shared Stylelint and ESLint configs: dots, relative paths on a
+new line, the `•` prefix marker, `✔` / `✖` completion marks, and
+`Linting complete!` after a successful process exit. Output goes to `stderr`,
+including one process-wide shutdown summary. Detailed summaries and throttling
+are disabled. Like the Stylelint config, progress remains visible in CI and
+outside a TTY; ESLint's `ESLINT_PROGRESS` environment switch does not apply here.
+
+Progress observes Markdown processing without changing lint messages, formatted
+Markdown, or exit codes. Reporters also using `stderr` share that stream with
+progress. Counts represent observed processing events, including repeated files
+in long-lived processes; ignored files and parser failures may never reach the
+plugin. A successful process exit does not prove there were no warnings.
+
+To disable progress, append a native unified plugin override through the existing
+factory:
+
+```js
+import { createConfig } from "remark-config-nick2bad4u";
+import remarkLintFileProgress from "remark-lint-file-progress";
+
+export default createConfig({
+ plugins: [[remarkLintFileProgress, false]],
+});
+```
+
+For customization, replace `false` with an options object, such as
+`{ hide: process.env.CI === "true" }` to hide progress and its summary in CI, or
+`{ fileNameOnNewLine: false }` for single-line filenames. Unified merges these
+options over the shared settings. Projects importing the plugin directly should
+declare `remark-lint-file-progress` as their own development dependency.
+
+The root, `preset`, `preset.mjs`, `eslint`, and `eslint-strict` entrypoints include
+progress. The standalone `toc` and `standard-readme` entrypoints remain focused
+on their existing tasks.
+
 ## Derived project config
 
 Use `createConfig` when a project needs local settings or extra plugins while

@@ -50,6 +50,9 @@ import remarkLintFencedCodeFlag from "remark-lint-fenced-code-flag";
 import remarkLintFencedCodeFlagCase from "remark-lint-fenced-code-flag-case";
 import remarkLintFencedCodeMarker from "remark-lint-fenced-code-marker";
 import remarkLintFileExtension from "remark-lint-file-extension";
+import remarkLintFileProgress, {
+    type ProgressSettings,
+} from "remark-lint-file-progress";
 import remarkLintFinalDefinition from "remark-lint-final-definition";
 import remarkLintFinalNewline from "remark-lint-final-newline";
 import remarkLintFirstHeadingLevel from "remark-lint-first-heading-level";
@@ -307,6 +310,29 @@ const sharedEslintDocHeadingOptions = {
 } satisfies DocHeadingsOptions;
 
 const sharedPlugins: PluggableList = [
+    // Match the presentation settings in the shared Stylelint and ESLint configs.
+    [
+        remarkLintFileProgress,
+        {
+            detailedSuccess: false,
+            failureMark: "✖",
+            fileNameOnNewLine: true,
+            hide: false,
+            hideFileName: false,
+            hidePrefix: false,
+            minFilesBeforeShow: 0,
+            mode: "file",
+            outputStream: "stderr",
+            pathFormat: "relative",
+            prefixMark: "•",
+            showSummaryWhenHidden: false,
+            spinnerStyle: "dots",
+            successMark: "✔",
+            successMessage: "Linting complete!",
+            throttleMs: 0,
+            ttyOnly: false,
+        } satisfies ProgressSettings,
+    ],
     remarkIgnoreStartPlugin,
     remarkFrontmatter,
     remarkGfm,

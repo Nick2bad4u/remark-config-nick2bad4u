@@ -74,18 +74,6 @@ const vitestConfig: ReturnType<typeof defineConfig> = defineConfig({
         attachmentsDir: "./.cache/vitest/.vitest-attachments",
         // Stop after 200 failures to avoid excessive output
         bail: 200,
-        benchmark: {
-            exclude: [
-                "**/dist*/**",
-                "**/html/**",
-                ...defaultExclude,
-            ],
-            include: ["benchmarks/**/*.bench.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-            includeSamples: true,
-            includeSource: ["src/**/*.ts"],
-            outputJson: "./coverage/bench-results.json",
-            reporters: ["default", "verbose"],
-        },
         chaiConfig: {
             includeStack: false,
             showDiff: true,
