@@ -4,8 +4,13 @@
 
 Version 2 enables `remark-lint-file-progress` in the shared preset and its ESLint
 documentation variants. This adds per-file output and a shutdown summary on
-`stderr`, including CI runs. Node requirements, Remark peers, exports, lint
-diagnostics, and Markdown formatting are unchanged by this integration.
+`stderr`, including CI runs. Remark peers, exports, lint diagnostics, and
+Markdown formatting are unchanged by this integration.
+
+The minimum Node version is now 22.19.0, matching the current runtime dependency
+graph. Earlier Node 22 versions can fail during import because the URL-checking
+dependency loads Undici 8 even while network checks are disabled. CI installs
+the packed package in a separate consumer and verifies this exact minimum.
 
 For the previous quiet behavior, install `remark-lint-file-progress` as a direct
 development dependency and use the [disable example](README.md#file-progress).

@@ -12,6 +12,7 @@ npm install --save-dev remark-config-nick2bad4u remark remark-cli
 
 The package ships the Remark plugins and lint presets it enables, so consuming
 repositories only need the shared config plus the Remark runner they use.
+Node.js 22.19.0 or newer is required by the current runtime dependency graph.
 
 ## Basic usage
 
