@@ -153,7 +153,7 @@
         "remark-lint-fenced-code-flag-case": "^3.0.0",
         "remark-lint-fenced-code-marker": "^4.0.1",
         "remark-lint-file-extension": "^3.0.1",
-        "remark-lint-file-progress": "^1.0.0",
+        "remark-lint-file-progress": "^1.0.1",
         "remark-lint-final-definition": "^4.0.2",
         "remark-lint-final-newline": "^3.0.1",
         "remark-lint-first-heading-level": "^4.0.1",
