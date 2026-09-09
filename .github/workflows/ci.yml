@@ -190,6 +190,6 @@ jobs:
                   cd "$CONSUMER_DIRECTORY"
                   git init --quiet
                   git remote add origin https://github.com/Nick2bad4u/remark-config-nick2bad4u.git
-                  npm install --global npm@12.0.2 --ignore-scripts
+                  # Use this Node release's bundled npm; npm 12 needs Node 22.22.2+.
                   npm install --ignore-scripts --engine-strict "$CONSUMER_TARBALL" remark@15.0.1 remark-cli@12.0.1
                   node consumer.mjs
