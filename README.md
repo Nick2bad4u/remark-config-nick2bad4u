@@ -146,6 +146,11 @@ including one process-wide shutdown summary. Detailed summaries and throttling
 are disabled. Like the Stylelint config, progress remains visible in CI and
 outside a TTY; ESLint's `ESLINT_PROGRESS` environment switch does not apply here.
 
+With `remark-lint-file-progress` 1.0.1 or newer, interactive terminals replace the
+previous progress display, including this preset's two-line filename layout.
+Redirected output uses readable lines. Reporter output and terminal resizing
+start a new progress region so existing diagnostics remain visible.
+
 Progress observes Markdown processing without changing lint messages, formatted
 Markdown, or exit codes. Reporters also using `stderr` share that stream with
 progress. Counts represent observed processing events, including repeated files

@@ -7,6 +7,10 @@ documentation variants. This adds per-file output and a shutdown summary on
 `stderr`, including CI runs. Remark peers, exports, lint diagnostics, and
 Markdown formatting are unchanged by this integration.
 
+The preset requires `remark-lint-file-progress` 1.0.1 or newer. Interactive
+terminals reuse the progress display instead of leaving one entry per file;
+redirected output continues to use ordinary lines.
+
 The minimum Node version is now 22.19.0, matching the current runtime dependency
 graph. Earlier Node 22 versions can fail during import because the URL-checking
 dependency loads Undici 8 even while network checks are disabled. CI installs
