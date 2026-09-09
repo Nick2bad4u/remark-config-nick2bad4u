@@ -7,6 +7,7 @@ concurrency:
     cancel-in-progress: true
 
 on:
+    workflow_dispatch:
     push:
         branches:
             - "main"
@@ -42,7 +43,7 @@ jobs:
         steps:
             - name: "Harden the runner (Audit all outbound calls)"
               if: "${{ matrix.os == 'ubuntu-latest' }}"
-              uses: "step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c" # v2.21.0
+              uses: "step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1" # v2.21.1
               with:
                   egress-policy: "audit"
 
@@ -136,7 +137,7 @@ jobs:
 
         steps:
             - name: "Harden the runner (Audit all outbound calls)"
-              uses: "step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c" # v2.21.0
+              uses: "step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1" # v2.21.1
               with:
                   egress-policy: "audit"
 
@@ -165,3 +166,30 @@ jobs:
 
             - name: "Run full verification pipeline"
               run: "npm run release:verify"
+
+            - name: "Prepare packed minimum-Node consumer"
+              run: |
+                  set -euo pipefail
+                  npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+                  tarball="$RUNNER_TEMP/$(node -p "const p = require('./package.json'); p.name + '-' + p.version + '.tgz'")"
+                  consumer=$(mktemp -d "$RUNNER_TEMP/remark-consumer-XXXXXX")
+                  cp test/fixtures/package-consumer.mjs "$consumer/consumer.mjs"
+                  printf '{"private":true,"type":"module"}\n' > "$consumer/package.json"
+                  echo "CONSUMER_DIRECTORY=$consumer" >> "$GITHUB_ENV"
+                  echo "CONSUMER_TARBALL=$tarball" >> "$GITHUB_ENV"
+
+            - name: "Setup minimum supported Node.js"
+              uses: "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020" # v7.0.0
+              with:
+                  node-version: "22.19.0"
+                  package-manager-cache: false
+
+            - name: "Verify packed consumer on Node 22.19.0"
+              run: |
+                  set -euo pipefail
+                  cd "$CONSUMER_DIRECTORY"
+                  git init --quiet
+                  git remote add origin https://github.com/Nick2bad4u/remark-config-nick2bad4u.git
+                  # Use this Node release's bundled npm; npm 12 needs Node 22.22.2+.
+                  npm install --ignore-scripts --engine-strict "$CONSUMER_TARBALL" remark@15.0.1 remark-cli@12.0.1
+                  node consumer.mjs

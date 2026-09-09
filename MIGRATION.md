@@ -1,5 +1,23 @@
 # Migrate remark config in a consumer repo
 
+## Version 2 file progress
+
+Version 2 enables `remark-lint-file-progress` in the shared preset and its ESLint
+documentation variants. This adds per-file output and a shutdown summary on
+`stderr`, including CI runs. Remark peers, exports, lint diagnostics, and
+Markdown formatting are unchanged by this integration.
+
+The minimum Node version is now 22.19.0, matching the current runtime dependency
+graph. Earlier Node 22 versions can fail during import because the URL-checking
+dependency loads Undici 8 even while network checks are disabled. CI installs
+the packed package in a separate consumer and verifies this exact minimum.
+
+For the previous quiet behavior, install `remark-lint-file-progress` as a direct
+development dependency and use the [disable example](README.md#file-progress).
+Apply that override after migrating any older local configuration below.
+
+## Adopt the shared preset
+
 **Run these commands in the consumer repository you want to migrate.**
 Below are three main steps (remove managed deps, install the shared preset, and switch to the shared config), plus an optional script setup.
 
