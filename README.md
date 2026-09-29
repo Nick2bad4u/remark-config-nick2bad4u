@@ -136,6 +136,47 @@ built-in heading or add an allowed H1 title without redefining the whole preset.
 Use `createEslintStrictConfig` from `remark-config-nick2bad4u/eslint-strict`
 for the same customization against the strict defaults.
 
+## Repository link validation performance
+
+For a config dedicated to one repository, resolve its Git metadata once when
+loading the config:
+
+```js
+import { createRepositoryConfig } from "remark-config-nick2bad4u";
+
+export default await createRepositoryConfig(new URL(".", import.meta.url));
+```
+
+The directory must be inside the consuming repository. Git finds the root even
+when the config lives in a nested directory or a linked worktree. The returned
+preset supplies that root and origin URL to `remark-validate-links`, avoiding
+two Git subprocesses for every Markdown file. Link and heading checks remain
+enabled, including Remark CLI checks between files.
+
+This helper is explicitly scoped to one repository. Use a separate config for
+each repository, including nested Git repositories. Recreate the config after
+changing the origin or repository root. The default preset and `createConfig`
+retain per-file discovery for tools that process multiple repositories together.
+If discovery fails, the helper preserves the default validator's per-file
+discovery and error behavior.
+
+The second argument accepts the same options as `createConfig`. Native unified
+overrides still work because the preset uses the original plugin identity:
+
+```js
+import { createRepositoryConfig } from "remark-config-nick2bad4u";
+import remarkValidateLinks from "remark-validate-links";
+
+export default await createRepositoryConfig(new URL(".", import.meta.url), {
+ plugins: [[remarkValidateLinks, { skipPathPatterns: ["generated/"] }]],
+});
+```
+
+Use `[remarkValidateLinks, false]` to disable link validation. To target a
+different repository explicitly, override both `repository` and `root` using
+the upstream plugin's options. Projects importing the validator directly should
+declare it as a development dependency.
+
 ## File progress
 
 The shared preset enables `remark-lint-file-progress` with the same presentation

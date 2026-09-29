@@ -251,7 +251,7 @@ describe("remark-config-nick2bad4u preset", () => {
         const file = await remark()
             .use(standardReadme)
             .process({
-                path: "README.md",
+                path: "remark-config-nick2bad4u/README.md",
                 value: [
                     "# remark-config-nick2bad4u",
                     "",

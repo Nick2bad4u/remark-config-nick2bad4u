@@ -135,6 +135,7 @@ import remarkValidateLinks from "remark-validate-links";
 import wikiLinkPlugin from "remark-wiki-link";
 
 import { mergeDocHeadingsOptions } from "./doc-heading-options.js";
+import { resolveRepositoryLinks } from "./repository-links.js";
 import { tocOptions } from "./toc-options.js";
 /* eslint-enable import-x/max-dependencies -- End shared Remark plugin import block. */
 
@@ -514,6 +515,32 @@ export const createConfig = (
         ...options.settings,
     },
 });
+
+/**
+ * Create a preset for files in one repository, resolving Git metadata once.
+ *
+ * @param directory - Directory within the consuming Git repository.
+ * @param options - Project-specific plugins and settings.
+ *
+ * @returns Preset with repository-scoped link validation. Failed discovery
+ *   falls back to the standard validator's per-file discovery and diagnostics.
+ */
+export const createRepositoryConfig = async (
+    directory: Readonly<URL> | string,
+    options: Readonly<RemarkConfigOptions> = {}
+): Promise<RemarkConfig> => {
+    const links = await resolveRepositoryLinks(directory);
+
+    return createConfig({
+        ...options,
+        plugins: [
+            ...(links
+                ? ([[remarkValidateLinks, links]] satisfies PluggableList)
+                : []),
+            ...(options.plugins ?? []),
+        ],
+    });
+};
 
 /** Shared recommended Remark preset. */
 export const preset: RemarkConfig = Object.freeze(createConfig());
